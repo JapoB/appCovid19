@@ -12,6 +12,20 @@ import {
 import DetallePacienteComponent from "./DetallePacienteComponent";
 
 const TablaPacientesComponent = (props) => {
+
+const updatePaciente = pacienteNuevo => {
+  console.log("Update paciente " + pacienteNuevo.dni)
+  let i=0;
+    tableData.forEach (pac =>{
+      if(pac.dni == pacienteNuevo.dni){
+       tableData[i]=pacienteNuevo
+      }
+      i++;
+
+    })
+  } 
+
+
   const [tableData, setTableData] = useState([
     { nombre: "Juan", apellido: "1", dni: "1", cama: "1", estado: "bien", edad:85, genero:'M',
             estadoClinico:{
@@ -124,8 +138,8 @@ const TablaPacientesComponent = (props) => {
         dimeroD:1100,
         linfopenia:1200,
         proteinaC:95,
-        urgencia:'Sin riesgo',
-        puntaje:0,
+        urgencia:'bajo',
+        puntaje:3,
     }},
     { nombre: "Juan", apellido: "8", dni: "8", cama: "5", estado: "bien" , edad:50, genero:'M',
     estadoClinico:{
@@ -143,8 +157,8 @@ const TablaPacientesComponent = (props) => {
         dimeroD:1100,
         linfopenia:1200,
         proteinaC:95,
-        urgencia:'Sin riesgo',
-        puntaje:0,
+        urgencia:'moderado',
+        puntaje:4,
     }},
     { nombre: "Juan", apellido: "9", dni: "9", cama: "5", estado: "bien" , edad:50, genero:'M',
     estadoClinico:{
@@ -162,8 +176,8 @@ const TablaPacientesComponent = (props) => {
         dimeroD:1100,
         linfopenia:1200,
         proteinaC:95,
-        urgencia:'Sin riesgo',
-        puntaje:0,
+        urgencia:'alto',
+        puntaje:10,
     }},
   ]);
 
@@ -189,7 +203,7 @@ const TablaPacientesComponent = (props) => {
       linfopenia:1200,
       proteinaC:95,
       urgencia:'Sin riesgo',
-      puntaje:0
+      puntaje:10
   } });
 
   const openModal = (item) => {
@@ -201,6 +215,18 @@ const TablaPacientesComponent = (props) => {
   const closeModal = () => {
     setVisibleDetalle(false);
   };
+
+  const getStylePuntaje = (urg) => {
+    let retorno = styles.verde
+    if(urg=='bajo')
+      retorno = styles.amarillo
+      if(urg=='moderado')
+      retorno = styles.naranja
+      if(urg=='alto')
+      retorno = styles.rojo
+    
+    return retorno;
+  }
 
   //borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}
 
@@ -219,10 +245,14 @@ const TablaPacientesComponent = (props) => {
 
       <ScrollView style={styles.scroll}>
         <FlatList
+        
           data={tableData}
+          key = {tableData.dni}
           renderItem={(itemData) => (
-            <TouchableOpacity onPress={() => openModal(itemData.item)}>
-              <View style={styles.item}>
+         
+         <TouchableOpacity onPress={() => openModal(itemData.item)}>
+             
+              <View style={getStylePuntaje(itemData.item.estadoClinico.urgencia)}>
                 <Text>{itemData.item.nombre}</Text>
 
                 <Text>{itemData.item.apellido}</Text>
@@ -231,6 +261,8 @@ const TablaPacientesComponent = (props) => {
 
                 <Text>{itemData.item.cama}</Text>
               </View>
+              
+        
             </TouchableOpacity>
           )}
         />
@@ -240,6 +272,7 @@ const TablaPacientesComponent = (props) => {
         visible={visibleDetalle}
         paciente={paciente}
         close={closeModal}
+        updatePaciente = {updatePaciente}
       />
     </View>
   );
@@ -268,7 +301,50 @@ const styles = StyleSheet.create({
     borderColor: "#c8e1ff",
     marginTop: 10,
   },
-
+  verde:{
+    backgroundColor:'#32CD32',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    width: "100%",
+    height: 40,
+    borderWidth: 2,
+    borderColor: "#c8e1ff",
+    marginTop: 10,
+  },
+  rojo:{
+    backgroundColor:'#FF0000',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    width: "100%",
+    height: 40,
+    borderWidth: 2,
+    borderColor: "#c8e1ff",
+    marginTop: 10,
+  },
+  amarillo:{
+    backgroundColor:'#FFFF00',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    width: "100%",
+    height: 40,
+    borderWidth: 2,
+    borderColor: "#c8e1ff",
+    marginTop: 10,
+  },
+  naranja:{
+    backgroundColor:'#FF8C00',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "flex-start",
+    width: "100%",
+    height: 40,
+    borderWidth: 2,
+    borderColor: "#c8e1ff",
+    marginTop: 10,
+  },
   headTable: {
     flexDirection: "row",
     marginTop: 20,

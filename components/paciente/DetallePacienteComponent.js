@@ -10,8 +10,25 @@ import {
 } from "react-native";
 
 const DetallePacientesComponent = (props) => {
+
+
   const [visibleCargar, setVisibleCargar] = useState(false);
   const [paciente, setPaciente] = useState(props.paciente)
+  const [lecturaFrecuenciaRespiratoria, setLecturaFrecuenciaRespiratoria] = useState(paciente.estadoClinico.frecuenciaRespiratoria)
+  const [lecturaSaturacionOxigeno, setLecturaSaturacionOxigeno] = useState(paciente.estadoClinico.saturacionOxigeno)
+  const [lecturaSaturacionOxigenoEpoc, setLecturaSaturacionOxigenoEpoc] = useState(paciente.estadoClinico.saturacionOxigenoEpoc)
+  const [lecturaOxigenoSuplementario, setLecturaOxigenoSuplementario] = useState(paciente.estadoClinico.oxigenoSuplementario)
+  const [lecturaPresionSistolitica, setLecturaPresionSistolitica] = useState(paciente.estadoClinico.presionSistolitica)
+  const [lecturaFrecuenciaCardiaca, setLecturaFrecuenciaCardiaca] = useState(paciente.estadoClinico.frecuenciaCardiaca)
+  const [lecturaLinfopenia, setLecturaLinfopenia] = useState(paciente.estadoClinico.linfopenia)
+  const [lecturaDimero, setLecturaDimero] = useState(paciente.estadoClinico.dimeroD)
+  const [lecturaDisnea, setLecturaDisnea] = useState(paciente.estadoClinico.disnea)
+  const [lecturaProteinaC, setLecturaProteinaC] = useState(paciente.estadoClinico.proteniaC)
+  const [lecturaTemperatura, setLecturaTemperatura] = useState(paciente.estadoClinico.temperatura)
+
+  
+
+
 
   const openCargarDatos = () => {
  
@@ -22,9 +39,58 @@ const DetallePacientesComponent = (props) => {
     setVisibleCargar(false);
   };
 
-  const aceptarCargarDatos = () =>{
-    console.log("se cargan datos");
+  const TextInputHandler = () =>{
+/** Aca deberia armar un objeto de nuevo estado para mandarlo a la bd
+ * y actualizar el paciente
+console.log(lecturaFrecuenciaRespiratoria)
+console.log(lecturaSaturacionOxigeno)
+console.log(lecturaSaturacionOxigenoEpoc)
+console.log(lecturaOxigenoSuplementario)
+console.log(lecturaPresionSistolitica)
+console.log(lecturaFrecuenciaCardiaca)
+console.log(lecturaTemperatura)
 
+*/
+console.log("Paciente antes de updetear ");
+console.log(paciente);
+
+console.log("Paciente props");
+console.log(props.paciente)
+
+setPaciente({...paciente,
+  dni: props.paciente.dni,
+  estadoClinico: {
+    icc:'no',
+    epoc:'no',
+    diabetes:'no',
+    frecuenciaRespiratoria:lecturaFrecuenciaRespiratoria,
+    saturacionOxigeno: lecturaSaturacionOxigeno,
+    saturacionOxigenoEpoc:lecturaSaturacionOxigenoEpoc ,
+    oxigenoSuplementario: lecturaOxigenoSuplementario,
+    presionSistolitica: lecturaPresionSistolitica,
+    frecuenciaCardiaca: lecturaFrecuenciaCardiaca,
+    temperatura: lecturaTemperatura,
+    dienea: lecturaDisnea,
+    dimeroD: lecturaDimero,
+    linfopenia: lecturaLinfopenia,
+    proteinaC: lecturaProteinaC,
+}
+})
+
+console.log("Paciente antes de calcular valor ");
+console.log(paciente);
+
+
+calcularValor();
+//console.log("Paciente despues de updetear ");
+//console.log(paciente);
+  }
+
+  const calcularValor = () =>{
+    
+    
+
+    let llega3 = false;
     let valor = 0;
 
     if(paciente.edad>=60 && paciente.edad <=64)
@@ -41,35 +107,43 @@ const DetallePacientesComponent = (props) => {
         valor++;
     if(paciente.estadoClinico.oxigenoSuplementario=='si') 
         valor+=3;
+        llega3 = true;
     if(paciente.estadoClinico.disnea == 'si')
         valor+=2;
     if(paciente.estadoClinico.frecuenciaRespiratoria <=8 )
-        valor+=3  
+        valor+=3;
+        llega3 = true;
     if(paciente.estadoClinico.frecuenciaRespiratoria <=11 && paciente.estadoClinico.frecuenciaRespiratoria >8 )
         valor+=1 
     if(paciente.estadoClinico.frecuenciaRespiratoria <=24 && paciente.estadoClinico.frecuenciaRespiratoria >20 )
         valor+=2 
     if(paciente.estadoClinico.frecuenciaRespiratoria >24 )
-        valor+=3
+        valor+=3;
+        llega3 = true;
     if(paciente.estadoClinico.saturacionOxigeno <=91)
-        valor+=3
+        valor+=3;
+        llega3 = true
     if(paciente.estadoClinico.saturacionOxigeno >=92 && paciente.estadoClinico.saturacionOxigeno <=93)
         valor+=2
     if(paciente.estadoClinico.saturacionOxigeno >=94 && paciente.estadoClinico.saturacionOxigeno <=95)
         valor+=1  
 //oxigeno Epoc
     if(paciente.estadoClinico.saturacionOxigenoEpoc <=83)
-        valor+=3
+        valor+=3;
+        llega3 = true
     if(paciente.estadoClinico.saturacionOxigeno >=84 && paciente.estadoClinico.saturacionOxigeno <=86)
         valor+=2
     if(paciente.estadoClinico.saturacionOxigeno >=87 && paciente.estadoClinico.saturacionOxigeno <=88)
         valor+=1  
     if(paciente.estadoClinico.presionSistolitica <= 90)
-        valor+=3
+        valor+=3;
+        llega3 = true;
     if(paciente.estadoClinico.presionSistolitica >= 220)
         valor+=3
+        llega3 = true;
     if(paciente.estadoClinico.frecuenciaCardiaca <= 40)
         valor+=3
+        llega3 = true;
     if(paciente.estadoClinico.frecuenciaCardiaca >= 41 &&  paciente.estadoClinico.frecuenciaCardiaca <=50)
         valor+=1
     if(paciente.estadoClinico.frecuenciaCardiaca >= 91 &&  paciente.estadoClinico.frecuenciaCardiaca <=110)
@@ -77,9 +151,11 @@ const DetallePacientesComponent = (props) => {
     if(paciente.estadoClinico.frecuenciaCardiaca >= 111 &&  paciente.estadoClinico.frecuenciaCardiaca <=130)
         valor+=2
     if(paciente.estadoClinico.frecuenciaCardiaca > 131)
-        valor+=3
+        valor+=3;
+        llega3 = true;
     if(paciente.estadoClinico.temperatura <= 35)
-        valor+=3
+        valor+=3;
+        llega3 = true;
     if(paciente.estadoClinico.temperatura >= 35 && paciente.estadoClinico.temperatura <= 35.5)
         valor+=1
     if(paciente.estadoClinico.temperatura >= 38 && paciente.estadoClinico.temperatura <= 39)
@@ -97,8 +173,57 @@ const DetallePacientesComponent = (props) => {
     if(paciente.estadoClinico.proteniaC > 100)
         valor+=1
 
-   console.log(valor)
-    setVisibleCargar(false);
+   console.log(valor);
+   let urgencia = 'Sin riesgo' 
+   if(valor>=3 && valor <=4){
+    urgencia = 'Bajo'
+   }
+   if((valor>=5 && valor <=7 ) || llega3){
+    urgencia = 'Moderado'
+   }
+   if(valor>=8 ){
+    urgencia = 'Alto'
+   }
+
+   /** 
+   setPaciente(
+    {...paciente,
+     estadoClinico:{...estadoClinico,
+       puntaje:valor,
+       urgencia:urgencia
+     }
+     })
+    */
+
+   setPaciente({...paciente,
+    estadoClinico: {
+    icc:'no',
+    epoc:'no',
+    diabetes:'no',
+    frecuenciaRespiratoria:lecturaFrecuenciaRespiratoria,
+    saturacionOxigeno: lecturaSaturacionOxigeno,
+    saturacionOxigenoEpoc:lecturaSaturacionOxigenoEpoc ,
+    oxigenoSuplementario: lecturaOxigenoSuplementario,
+    presionSistolitica: lecturaPresionSistolitica,
+    frecuenciaCardiaca: lecturaFrecuenciaCardiaca,
+    temperatura: lecturaTemperatura,
+    dienea: lecturaDisnea,
+    dimeroD: lecturaDimero,
+    linfopenia: lecturaLinfopenia,
+    proteinaC: lecturaProteinaC,
+      puntaje:valor,
+      urgencia:urgencia
+  }
+  })
+
+  
+   console.log(urgencia);
+  // console.log(paciente);
+
+  console.log("llamo a update desde detalle con dni "+paciente.dni);
+   props.updatePaciente(paciente);
+
+   setVisibleCargar(false);
   
   }
 
@@ -165,38 +290,51 @@ else {
   <View style={styles.inputContainer}>
   <TextInput  style={styles.input}
     placeholder="Frecuencia respiratoria"
-  />
-   <TextInput  style={styles.input}
-    placeholder="Saturación de oxígeno"
-  />
-   <TextInput  style={styles.input}
-    placeholder="Saturación de oxígeno EPOC"
-  />
-   <TextInput  style={styles.input}
-    placeholder="Oxígeno suplementario"
-  />
-   <TextInput  style={styles.input}
-    placeholder="Presión sistólica"
-  />
-   <TextInput  style={styles.input}
-    placeholder="Frecuencia cardiaca"
-  />
-     <TextInput  style={styles.input}
-    placeholder="Temperatura °C"
-  />
-     <TextInput  style={styles.input}
-    placeholder="Refiere Disnea"
-  />
-     <TextInput  style={styles.input}
-    placeholder="ODimero D"
-  />
+    onChangeText={(value) => setLecturaFrecuenciaRespiratoria(value)}
+  /> 
+  <TextInput  style={styles.input}
+placeholder="Saturación de oxígeno"
+onChangeText={(value) => setLecturaSaturacionOxigeno(value)}
+
+/>
+<TextInput  style={styles.input}
+placeholder="Saturación de oxígeno EPOC"
+onChangeText={(value) => setLecturaSaturacionOxigenoEpoc(value)}
+/>
+<TextInput  style={styles.input}
+placeholder="Oxígeno suplementario"
+onChangeText={(oxigenoSuplementario) => setLecturaOxigenoSuplementario(oxigenoSuplementario)}
+/>
+<TextInput  style={styles.input}
+placeholder="Presión sistólica"
+onChangeText={(sistolitica) => setLecturaPresionSistolitica(sistolitica)}
+/>
+<TextInput  style={styles.input}
+placeholder="Frecuencia cardiaca"
+onChangeText={(frecuenciaCardiaca) => setLecturaFrecuenciaCardiaca(frecuenciaCardiaca)}
+/>
+ <TextInput  style={styles.input}
+placeholder="Temperatura °C"
+onChangeText={(temperatura) => setLecturaTemperatura(temperatura)}
+/>
+ <TextInput  style={styles.input}
+placeholder="Refiere Disnea"
+onChangeText={(disnea) => setLecturaDisnea(disnea)}
+/>
+ <TextInput  style={styles.input}
+placeholder="Dimero D"
+onChangeText={(dimeroD) => setLecturaDimero(dimeroD)}
+/>
 
 <TextInput  style={styles.input}
-    placeholder="Linfopenia"
-    />
-     <TextInput  style={styles.input}
-    placeholder="Proteína C reactiva"
-  />
+placeholder="Linfopenia"
+onChangeText={(linfopenia) => setLecturaLinfopenia(linfopenia)}
+/>
+ <TextInput  style={styles.input}
+placeholder="Proteína C reactiva"
+onChangeText={(proteniaC) => setLecturaProteinaC(proteniaC)}
+/>
+ 
     </View>
     </ScrollView>
     <View style={styles.internalInput}>
@@ -205,7 +343,7 @@ else {
 <Button title="Cancelar" color="red" onPress={closeCargarDatos} />
 </View>
 <View style={styles.button}>
-    <Button title="Cargar"  onPress={()=> aceptarCargarDatos(props.paciente)} />
+    <Button title="Cargar"  onPress={()=> TextInputHandler()} />
     </View>
 </View>
 </Modal>
