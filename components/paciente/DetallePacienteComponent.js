@@ -42,135 +42,121 @@ const DetallePacientesComponent = (props) => {
   const TextInputHandler = () =>{
 /** Aca deberia armar un objeto de nuevo estado para mandarlo a la bd
  * y actualizar el paciente
-console.log(lecturaFrecuenciaRespiratoria)
-console.log(lecturaSaturacionOxigeno)
-console.log(lecturaSaturacionOxigenoEpoc)
-console.log(lecturaOxigenoSuplementario)
-console.log(lecturaPresionSistolitica)
-console.log(lecturaFrecuenciaCardiaca)
-console.log(lecturaTemperatura)
 
 */
-console.log("Paciente antes de updetear ");
-console.log(paciente);
-
-console.log("Paciente props");
-console.log(props.paciente)
-
-setPaciente({...paciente,
-  dni: props.paciente.dni,
-  estadoClinico: {
-    icc:'no',
-    epoc:'no',
-    diabetes:'no',
-    frecuenciaRespiratoria:lecturaFrecuenciaRespiratoria,
-    saturacionOxigeno: lecturaSaturacionOxigeno,
-    saturacionOxigenoEpoc:lecturaSaturacionOxigenoEpoc ,
-    oxigenoSuplementario: lecturaOxigenoSuplementario,
-    presionSistolitica: lecturaPresionSistolitica,
-    frecuenciaCardiaca: lecturaFrecuenciaCardiaca,
-    temperatura: lecturaTemperatura,
-    dienea: lecturaDisnea,
-    dimeroD: lecturaDimero,
-    linfopenia: lecturaLinfopenia,
-    proteinaC: lecturaProteinaC,
-}
-})
-
-console.log("Paciente antes de calcular valor ");
-console.log(paciente);
-
-
-calcularValor();
-//console.log("Paciente despues de updetear ");
+//console.log("Paciente antes de updetear ");
 //console.log(paciente);
+
+//console.log("Paciente props");
+//console.log(props.paciente)
+
+
+let updatePaciente = props.paciente
+updatePaciente = {...updatePaciente,
+ estadoClinico:{
+ ...updatePaciente.estadoClinico,
+ frecuenciaRespiratoria:lecturaFrecuenciaRespiratoria,
+ saturacionOxigeno: lecturaSaturacionOxigeno,
+ saturacionOxigenoEpoc:lecturaSaturacionOxigenoEpoc ,
+ oxigenoSuplementario: lecturaOxigenoSuplementario,
+ presionSistolitica: lecturaPresionSistolitica,
+ frecuenciaCardiaca: lecturaFrecuenciaCardiaca,
+ temperatura: lecturaTemperatura,
+ dienea: lecturaDisnea,
+ dimeroD: lecturaDimero,
+ linfopenia: lecturaLinfopenia,
+ proteinaC: lecturaProteinaC,
+}}
+
+calcularValor(updatePaciente);
+
   }
 
-  const calcularValor = () =>{
+  const calcularValor = (updatePaciente) =>{
     
     
 
     let llega3 = false;
     let valor = 0;
 
-    if(paciente.edad>=60 && paciente.edad <=64)
+    if(updatePaciente.edad>=60 && updatePaciente.edad <=64)
         valor++;
-    if(paciente.edad>65)    
+    if(updatePaciente.edad>65)    
         valor+=2;
-    if(paciente.genero=='M')
+    if(updatePaciente.genero=='M')
         valor++;
-    if(paciente.estadoClinico.icc=='si')
+    if(updatePaciente.estadoClinico.icc=='si')
         valor++;
-    if(paciente.estadoClinico.epoc=='si')
+    if(updatePaciente.estadoClinico.epoc=='si')
         valor++;
-    if(paciente.estadoClinico.diabetes=='si')
+    if(updatePaciente.estadoClinico.diabetes=='si')
         valor++;
-    if(paciente.estadoClinico.oxigenoSuplementario=='si') 
+    if(updatePaciente.estadoClinico.oxigenoSuplementario=='si') 
         valor+=3;
         llega3 = true;
-    if(paciente.estadoClinico.disnea == 'si')
+    if(updatePaciente.estadoClinico.disnea == 'si')
         valor+=2;
-    if(paciente.estadoClinico.frecuenciaRespiratoria <=8 )
+    if(updatePaciente.estadoClinico.frecuenciaRespiratoria <=8 )
         valor+=3;
         llega3 = true;
-    if(paciente.estadoClinico.frecuenciaRespiratoria <=11 && paciente.estadoClinico.frecuenciaRespiratoria >8 )
+    if(updatePaciente.estadoClinico.frecuenciaRespiratoria <=11 && updatePaciente.estadoClinico.frecuenciaRespiratoria >8 )
         valor+=1 
-    if(paciente.estadoClinico.frecuenciaRespiratoria <=24 && paciente.estadoClinico.frecuenciaRespiratoria >20 )
+    if(updatePaciente.estadoClinico.frecuenciaRespiratoria <=24 && updatePaciente.estadoClinico.frecuenciaRespiratoria >20 )
         valor+=2 
-    if(paciente.estadoClinico.frecuenciaRespiratoria >24 )
+    if(updatePaciente.estadoClinico.frecuenciaRespiratoria >24 )
         valor+=3;
         llega3 = true;
-    if(paciente.estadoClinico.saturacionOxigeno <=91)
+    if(updatePaciente.estadoClinico.saturacionOxigeno <=91)
         valor+=3;
         llega3 = true
-    if(paciente.estadoClinico.saturacionOxigeno >=92 && paciente.estadoClinico.saturacionOxigeno <=93)
+    if(updatePaciente.estadoClinico.saturacionOxigeno >=92 && updatePaciente.estadoClinico.saturacionOxigeno <=93)
         valor+=2
-    if(paciente.estadoClinico.saturacionOxigeno >=94 && paciente.estadoClinico.saturacionOxigeno <=95)
+    if(updatePaciente.estadoClinico.saturacionOxigeno >=94 && updatePaciente.estadoClinico.saturacionOxigeno <=95)
         valor+=1  
 //oxigeno Epoc
-    if(paciente.estadoClinico.saturacionOxigenoEpoc <=83)
+    if(updatePaciente.estadoClinico.saturacionOxigenoEpoc <=83)
         valor+=3;
         llega3 = true
-    if(paciente.estadoClinico.saturacionOxigeno >=84 && paciente.estadoClinico.saturacionOxigeno <=86)
+    if(updatePaciente.estadoClinico.saturacionOxigeno >=84 && updatePaciente.estadoClinico.saturacionOxigeno <=86)
         valor+=2
-    if(paciente.estadoClinico.saturacionOxigeno >=87 && paciente.estadoClinico.saturacionOxigeno <=88)
+    if(updatePaciente.estadoClinico.saturacionOxigeno >=87 && updatePaciente.estadoClinico.saturacionOxigeno <=88)
         valor+=1  
-    if(paciente.estadoClinico.presionSistolitica <= 90)
+    if(updatePaciente.estadoClinico.presionSistolitica <= 90)
         valor+=3;
         llega3 = true;
-    if(paciente.estadoClinico.presionSistolitica >= 220)
+    if(updatePaciente.estadoClinico.presionSistolitica >= 220)
         valor+=3
         llega3 = true;
-    if(paciente.estadoClinico.frecuenciaCardiaca <= 40)
+    if(updatePaciente.estadoClinico.frecuenciaCardiaca <= 40)
         valor+=3
         llega3 = true;
-    if(paciente.estadoClinico.frecuenciaCardiaca >= 41 &&  paciente.estadoClinico.frecuenciaCardiaca <=50)
+    if(updatePaciente.estadoClinico.frecuenciaCardiaca >= 41 &&  updatePaciente.estadoClinico.frecuenciaCardiaca <=50)
         valor+=1
-    if(paciente.estadoClinico.frecuenciaCardiaca >= 91 &&  paciente.estadoClinico.frecuenciaCardiaca <=110)
+    if(updatePaciente.estadoClinico.frecuenciaCardiaca >= 91 &&  updatePaciente.estadoClinico.frecuenciaCardiaca <=110)
         valor+=1
-    if(paciente.estadoClinico.frecuenciaCardiaca >= 111 &&  paciente.estadoClinico.frecuenciaCardiaca <=130)
+    if(updatePaciente.estadoClinico.frecuenciaCardiaca >= 111 &&  updatePaciente.estadoClinico.frecuenciaCardiaca <=130)
         valor+=2
-    if(paciente.estadoClinico.frecuenciaCardiaca > 131)
+    if(updatePaciente.estadoClinico.frecuenciaCardiaca > 131)
         valor+=3;
         llega3 = true;
-    if(paciente.estadoClinico.temperatura <= 35)
+    if(updatePaciente.estadoClinico.temperatura <= 35)
         valor+=3;
         llega3 = true;
-    if(paciente.estadoClinico.temperatura >= 35 && paciente.estadoClinico.temperatura <= 35.5)
+    if(updatePaciente.estadoClinico.temperatura >= 35 && updatePaciente.estadoClinico.temperatura <= 35.5)
         valor+=1
-    if(paciente.estadoClinico.temperatura >= 38 && paciente.estadoClinico.temperatura <= 39)
+    if(updatePaciente.estadoClinico.temperatura >= 38 && updatePaciente.estadoClinico.temperatura <= 39)
         valor+=1
-    if(paciente.estadoClinico.temperatura > 39)
+    if(updatePaciente.estadoClinico.temperatura > 39)
         valor+=2
-    if(paciente.estadoClinico.dimeroD >1000)
+    if(updatePaciente.estadoClinico.dimeroD >1000)
         valor+=1
-    if(paciente.estadoClinico.linfopenia <1000 && paciente.estadoClinico.linfopenia >=500 )
+    if(updatePaciente.estadoClinico.linfopenia <1000 && updatePaciente.estadoClinico.linfopenia >=500 )
         valor+=1
 
-    if(paciente.estadoClinico.linfopenia <500)
+    if(updatePaciente.estadoClinico.linfopenia <500)
         valor+=2
       
-    if(paciente.estadoClinico.proteniaC > 100)
+    if(updatePaciente.estadoClinico.proteniaC > 100)
         valor+=1
 
    console.log(valor);
@@ -194,36 +180,24 @@ calcularValor();
      }
      })
     */
+   updatePaciente = {...updatePaciente,
+    estadoClinico:{
+    ...updatePaciente.estadoClinico,
+    puntaje:valor,
+    urgencia:urgencia
+  }}
 
-   setPaciente({...paciente,
-    estadoClinico: {
-    icc:'no',
-    epoc:'no',
-    diabetes:'no',
-    frecuenciaRespiratoria:lecturaFrecuenciaRespiratoria,
-    saturacionOxigeno: lecturaSaturacionOxigeno,
-    saturacionOxigenoEpoc:lecturaSaturacionOxigenoEpoc ,
-    oxigenoSuplementario: lecturaOxigenoSuplementario,
-    presionSistolitica: lecturaPresionSistolitica,
-    frecuenciaCardiaca: lecturaFrecuenciaCardiaca,
-    temperatura: lecturaTemperatura,
-    dienea: lecturaDisnea,
-    dimeroD: lecturaDimero,
-    linfopenia: lecturaLinfopenia,
-    proteinaC: lecturaProteinaC,
-      puntaje:valor,
-      urgencia:urgencia
-  }
-  })
+ 
 
-  
+  setPaciente(updatePaciente)
+
+  console.log("el paciente update que acabo de crear")
+  console.log(updatePaciente)
    console.log(urgencia);
-  // console.log(paciente);
 
-  console.log("llamo a update desde detalle con dni "+paciente.dni);
-   props.updatePaciente(paciente);
+  props.updatePaciente(updatePaciente);
 
-   setVisibleCargar(false);
+  setVisibleCargar(false);
   
   }
 
@@ -252,18 +226,18 @@ calcularValor();
           </Text>
 
           <Text style={styles.boldi}>Ultimos datos clinicos</Text>
-          <Text>Ugencia: {props.paciente.estadoClinico.urgencia} ({props.paciente.estadoClinico.puntaje})</Text>
-          <Text>Frecuencia respiratoria: {props.paciente.estadoClinico.frecuenciaRespiratoria}</Text>
-          <Text>Saturación de oxígeno: {props.paciente.estadoClinico.saturacionOxigeno}</Text>
-          <Text>Saturación de oxígeno EPOC: {props.paciente.estadoClinico.saturacionOxigenoEpoc}</Text>
-          <Text>Oxígeno suplementario: {props.paciente.estadoClinico.oxigenoSuplementario}</Text>
-          <Text>Presión sistólica: {props.paciente.estadoClinico.presionSistolitica}</Text>
-          <Text>Frecuencia cardiaca: {props.paciente.estadoClinico.frecuenciaCardiaca}</Text>
-          <Text>Temperatura °C: {props.paciente.estadoClinico.temperatura}</Text>
-          <Text>Refiere Disnea: {props.paciente.estadoClinico.disnea}</Text>
-          <Text>Dimero D: {props.paciente.estadoClinico.dimeroD}</Text>
-          <Text>Linfopenia: {props.paciente.estadoClinico.linfopenia}</Text>
-          <Text>Proteína C reactiva: {props.paciente.estadoClinico.proteniaC}</Text>
+          <Text>Ugencia: {paciente.estadoClinico.urgencia} ({paciente.estadoClinico.puntaje})</Text>
+          <Text>Frecuencia respiratoria: {paciente.estadoClinico.frecuenciaRespiratoria}</Text>
+          <Text>Saturación de oxígeno: {paciente.estadoClinico.saturacionOxigeno}</Text>
+          <Text>Saturación de oxígeno EPOC: {paciente.estadoClinico.saturacionOxigenoEpoc}</Text>
+          <Text>Oxígeno suplementario: {paciente.estadoClinico.oxigenoSuplementario}</Text>
+          <Text>Presión sistólica: {paciente.estadoClinico.presionSistolitica}</Text>
+          <Text>Frecuencia cardiaca: {paciente.estadoClinico.frecuenciaCardiaca}</Text>
+          <Text>Temperatura °C: {paciente.estadoClinico.temperatura}</Text>
+          <Text>Refiere Disnea: {paciente.estadoClinico.disnea}</Text>
+          <Text>Dimero D: {paciente.estadoClinico.dimeroD}</Text>
+          <Text>Linfopenia: {paciente.estadoClinico.linfopenia}</Text>
+          <Text>Proteína C reactiva: {paciente.estadoClinico.proteniaC}</Text>
         </View>
       </ScrollView>
     

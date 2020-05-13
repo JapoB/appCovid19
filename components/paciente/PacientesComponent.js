@@ -10,12 +10,10 @@ const PacientesComponent = (props) => {
 
     return (
       
-      <Modal visible={props.visible} animationType='slide'>
-          
+     <View>  
          <TablaPacientesComponent/>
-
-         <Button title="Menu Principal" onPress={props.close.bind(this)}/> 
-      </Modal>
+          <Button title="Menu Principal" onPress={() =>props.navigation.navigate('Home')}/> 
+     </View>
 
 
 

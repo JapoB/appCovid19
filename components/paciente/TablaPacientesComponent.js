@@ -10,19 +10,25 @@ import {
   ScrollView,
 } from "react-native";
 import DetallePacienteComponent from "./DetallePacienteComponent";
+import _ from 'lodash';
+
 
 const TablaPacientesComponent = (props) => {
 
-const updatePaciente = pacienteNuevo => {
-  console.log("Update paciente " + pacienteNuevo.dni)
-  let i=0;
-    tableData.forEach (pac =>{
-      if(pac.dni == pacienteNuevo.dni){
-       tableData[i]=pacienteNuevo
-      }
-      i++;
 
-    })
+
+const updatePaciente = pacienteNuevo => {
+
+
+
+  console.log("Update paciente " + pacienteNuevo.dni)
+
+
+    var index = _.findIndex(tableData, {dni: pacienteNuevo.dni});
+    tableData.splice(index, 1, pacienteNuevo);
+    setTableData(tableData);
+   
+
   } 
 
 
@@ -277,6 +283,8 @@ const updatePaciente = pacienteNuevo => {
     </View>
   );
 };
+
+
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },

@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 12973,
-  "expoServerNgrokUrl": null,
-  "packagerNgrokUrl": null,
-  "ngrokPid": null,
+  "packagerPid": 7512,
+  "expoServerNgrokUrl": "https://za-enf.anonymous.appcovid19.exp.direct",
+  "packagerNgrokUrl": "https://packager.za-enf.anonymous.appcovid19.exp.direct",
+  "ngrokPid": 4100,
   "webpackServerPort": null
 }
