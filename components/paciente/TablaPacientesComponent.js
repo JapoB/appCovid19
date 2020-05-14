@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import DetallePacienteComponent from "./DetallePacienteComponent";
 import _ from 'lodash';
+import { SelectPacientes } from "../../baseDatos/Querys";
+ 
 
 
 const TablaPacientesComponent = (props) => {
@@ -30,9 +32,50 @@ const updatePaciente = pacienteNuevo => {
    
 
   } 
+  const [tableData, setTableData] = useState ([]) 
+
+  
+/* let dniEncontrado = -1;
+   props.db.transaction( async (tx) => {
+   console.log("busco tabla en tablaPacientes")
+   await tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
+      console.log("Query completed");
 
 
-  const [tableData, setTableData] = useState([
+      var len = results.rows.length;
+      for (let i = 0; i < len; i++) {
+        let row = results.rows.item(i);
+        console.log(`dni : ${row.dni}`);
+        dniEncontrado = row.dni
+      }
+    });
+  });  */
+
+/* console.log("++++++++++++++++++")
+console.log(dniEncontrado) */
+ 
+console.log("@@@@@@@@@@@@@@@@@@")
+//att();
+//console.log(SelectPacientes(props.db));
+
+const att = async () => {
+
+
+await db.transaction((tx) => {
+  console.log("busco tabla en tabla pacientes")
+  tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
+      console.log("Query completed de tabla pacientes");
+ 
+
+      var len = results.rows.length;
+      for (let i = 0; i < len; i++) {
+        let row = results.rows.item(i);
+        console.log(`dni : ${row.dni}`);
+      }
+    });
+});
+}
+ /*  const [tableData, setTableData] = useState([
     { nombre: "Juan", apellido: "1", dni: "1", cama: "1", estado: "bien", edad:85, genero:'M',
             estadoClinico:{
                 icc:'no',
@@ -185,7 +228,9 @@ const updatePaciente = pacienteNuevo => {
         urgencia:'alto',
         puntaje:10,
     }},
-  ]);
+  ]); */
+
+
 
   const tableHead = ["Nombre", "Apellido", "DNI", "CAMA"];
 

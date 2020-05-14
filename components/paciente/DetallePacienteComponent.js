@@ -191,9 +191,9 @@ calcularValor(updatePaciente);
 
   setPaciente(updatePaciente)
 
-  console.log("el paciente update que acabo de crear")
-  console.log(updatePaciente)
-   console.log(urgencia);
+ // console.log("el paciente update que acabo de crear")
+ // console.log(updatePaciente)
+  // console.log(urgencia);
 
   props.updatePaciente(updatePaciente);
 

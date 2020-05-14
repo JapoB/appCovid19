@@ -1,2 +1,4 @@
 1) Ver por que no reenderiza la vista de la tabla cuando se modifica el paciente.
 2) Ver lo de sqlite
+3) Logeo. Varios usuarios pueden usar la app en un mism dispositivo. Se tiene que guardar el usuario pero no la pass
+4) Por ahora no hay autentifiacion cuandos e conecta al lider
