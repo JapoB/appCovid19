@@ -6,9 +6,6 @@ import { SelectPacientes } from "../../baseDatos/QuerysComunes";
 
 const PacientesComponent = (props) => {
 
-   
-
-
     return (
       
      <View>  
