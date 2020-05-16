@@ -54,7 +54,7 @@ const updatePaciente = pacienteNuevo => {
 /* console.log("++++++++++++++++++")
 console.log(dniEncontrado) */
  
-console.log("@@@@@@@@@@@@@@@@@@")
+console.log("@@@@@@@@@@@@@@@@@@xxx")
 //att();
 //console.log(SelectPacientes(props.db));
 
