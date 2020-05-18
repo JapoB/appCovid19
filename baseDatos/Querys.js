@@ -63,15 +63,9 @@ return  db;
 
   export const SelectPacientes = async (db) => {
       var re = await db.transaction( (tx) => {
-        tx.executeSql('SELECT * FROM Paciente', [], (tx,results)=>{
-          console.log("Exito en buscar pacientes");
-          let row = results.rows.item(i);
-          console.log("8888888888888888888")
-         console.log($results.rows.item(0).dni)
-        })
+        tx.executeSql('SELECT * FROM Paciente', [], )
         });
      return re;
-
   } 
 
 /*   export const SelectPacientes = async (db) => {

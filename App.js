@@ -10,7 +10,7 @@ import _ from 'lodash';
 //import { openDatabase } from 'react-native-sqlite-storage';
 import { QueryInicial } from "./baseDatos/Querys";
 import * as SQLite from 'expo-sqlite';
-
+ 
  
 
 //Llama a la bd y crea las tablas
