@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 
+
 /* Components */
 import PacientesComponent from "./components/paciente/PacientesComponent";
 import SignoVitalComponent from "./components/signoVital/SignoVitalComponent";
