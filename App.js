@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
+
+/* Components */
 import PacientesComponent from "./components/paciente/PacientesComponent";
+import SignoVitalComponent from "./components/signoVital/SignoVitalComponent";
+import AddSignoVitalComponent from "./components/signoVital/AddSignoVital"
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -10,92 +15,79 @@ import _ from 'lodash';
 //import { openDatabase } from 'react-native-sqlite-storage';
 import { QueryInicial } from "./baseDatos/Querys";
 import * as SQLite from 'expo-sqlite';
- 
- 
+import SignoVital from "./components/signoVital/SignoVitalComponent";
+
+
 
 //Llama a la bd y crea las tablas
 var db = QueryInicial();
-
-/* const db = SQLite.openDatabase("db.db");
- 
-  
-console.log("**************************************************")
-
-
-db.transaction((tx) =>{
-  console.log("Dropeo la tabla Paciente")
-  tx.executeSql('DROP TABLE Paciente',[],(txt,results)=>
-  console.log("Dropeo exitoso"))
-}) */
-/* 
-db.transaction((tx ) => {
-  console.log("creo trabla de paciente")
-  tx.executeSql('CREATE TABLE Paciente(dni INTEGER PRIMARY KEY, nombre VARCHAR(20),apellido VARCHAR(20), genero varchar(20))',[],(tx,results)=>{
-  console.log("Creacion de tabla exitosa")
-  console.log(results)})
-});
-
-
-db.transaction((tx ) => {
-  console.log("inserto en tabla paciente")
-  tx.executeSql('INSERT INTO Paciente (dni, nombre,apellido,genero) VALUES (1,"Juan","Perez","M")',[],(tx,results)=>{
-  console.log("insersion exitosa")
-  console.log(results)})
-
-});
-
-db.transaction((tx) => {
-  console.log("busco tabla")
-  tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
-      console.log("Query completed");
-
-    
-      var len = results.rows.length;
-      for (let i = 0; i < len; i++) {
-        let row = results.rows.item(i);
-        console.log(`dni : ${row.dni}`);
-      }
-    });
-}); */
-
- 
 
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const MaterialBottomTabs = createMaterialBottomTabNavigator();
-const MaterialTopTabs  = createMaterialTopTabNavigator();
+const MaterialTopTabs = createMaterialTopTabNavigator();
 
 
 function HomeScreen({ navigation }) {
   return (
-<View style={styles.container}>
+    <View style={styles.container}>
       <Text> App Covid 19 </Text>
-      <Button title="Ver pacientes" onPress={() => navigation.navigate('Pacientes')} />
+
+      <View style={{ marginTop: 10 }}>
+
+        <Button title="Ver pacientes" onPress={() => navigation.navigate('Pacientes')} />
+      </View>
+      <View style={{ marginTop: 10 }}>
+        <Button title="Ver Signos Vitales" onPress={() => navigation.navigate('SignoVital')} />
+      </View>
+      <View style={{ marginTop: 10 }}>
+        <Button title="Cargar Signos Vitales" onPress={() => navigation.navigate('AddSignoVital')} />
+      </View>
+
+
     </View>
-  );  
+  );
 }
 
 function PacientesScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <PacientesComponent navigation={navigation} db ={db}/>
+      <PacientesComponent navigation={navigation} db={db} />
+    </View>
+  );
+}
+function SignoVitalScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <SignoVitalComponent navigation={navigation} />
+    </View>
+  );
+}
+function AddSignoVitalScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <AddSignoVitalComponent navigation={navigation} db={db}/>
     </View>
   );
 }
 
 
+
 export default function App() {
   console.disableYellowBox = true;
- 
+
 
 
   return (
     <NavigationContainer>
-    <Drawer.Navigator initialRouteName="Home" >
-      <Drawer.Screen name="Home" component={HomeScreen} />
-      <Drawer.Screen name="Pacientes" component={PacientesScreen} />
-    </Drawer.Navigator>
+      <Drawer.Navigator initialRouteName="Home" >
+        <Drawer.Screen name="Home" component={HomeScreen} />
+        <Drawer.Screen name="Pacientes" component={PacientesScreen} />
+        <Drawer.Screen name="SignoVital" component={SignoVitalScreen} options={{ title: 'Signos Vitales' }} />
+        <Drawer.Screen name="AddSignoVital" component={AddSignoVitalScreen} options={{ title: 'Cargar Signos Vitales' }} />
+
+      </Drawer.Navigator>
     </NavigationContainer>
   );
 }
@@ -107,4 +99,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+  boton: {
+    marginTop: 15
+  }
 });
