@@ -51,12 +51,7 @@ const updatePaciente = pacienteNuevo => {
     });
   });  */
 
-/* console.log("++++++++++++++++++")
-console.log(dniEncontrado) */
- 
-console.log("@@@@@@@@@@@@@@@@@@xxx")
-//att();
-//console.log(SelectPacientes(props.db));
+
 
 const att = async () => {
 

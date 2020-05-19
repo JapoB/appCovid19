@@ -9,22 +9,41 @@ import { openDatabase } from 'react-native-sqlite-storage';
 export const QueryInicial = () => {
 
   const db = SQLite.openDatabase("db.db");
+  db.transaction((tx) => {
+    console.log("Intento dropear hospital")
+      tx.executeSql('DROP TABLE Hospital',[],() => {
+    console.log("Dropeo de hospital exitoso")
+  });
+});
 
-  //var db =  openDatabase({ name: 'test.db' , createFromLocation : 1});
+  db.transaction((tx) => {
+    console.log("Dropeo la tabla paciente")
+    tx.executeSql('DROP TABLE Paciente', [], () =>
+      console.log("Dropeo exitoso"))
+  })
 
   console.log("**************************************************")
 
 
-  db.transaction((tx) => {
-    console.log("Dropeo la tabla paciente")
-    tx.executeSql('DROP TABLE Paciente', [], results =>
-      console.log("Dropeo exitoso"))
-  }, () => { }, () => {
+  db.transaction((tx)=>{
+    console.log("Creo tabla Hospital")
+    tx.executeSql('CREATE TABLE Hospital (id INT PRIMARY KEY NOT NULL, nombre varchar(40),'+
+     'calle varchar(40),numero varchar(10),CP varchar(10),planoCamas varchar(20))',[],()=>{
+       console.log("Creacion de tabla hospital exitosa")
+     })
+  },[], () =>{
+
+
     db.transaction((tx) => {
-      console.log("creo trabla de paciente")
-      tx.executeSql('CREATE TABLE Paciente(dni INTEGER PRIMARY KEY, nombre VARCHAR(20),apellido VARCHAR(20), genero varchar(20))', [], (tx, results) => {
-        console.log("Creacion de tabla exitosa")
-      }, () => { }, () => {
+      console.log("creo tabla de paciente")
+      tx.executeSql('CREATE TABLE Paciente(dni INT NOT NULL, tipoDocumento varchar(10) NOT NULL,'+
+      'nombre VARCHAR(30),apellido VARCHAR(30), genero varchar(1),paisExp varchar(20),'+
+      'nacionalidad varchar(30),calle varchar(40),numero varchar(10),piso varchar(20),depto varchar(10),'+
+      'CP varchar(10),telefono varchar(20), telefonoFamiliar varchar(20), telefonoFamiliar2 varchar(20),' +
+      'fechaNac date, fechaIngreso date, idHospital INT ,PRIMARY KEY (dni,tipoDocumento)'+
+      'FOREIGN KEY (idHospital) REFERENCES Hospital (id))', [], () => {
+        console.log("Creacion de tabla Paciente exitosa")
+      }, ()=>{ }, () => {
 
         db.transaction((tx) => {
           console.log("inserto en tabla paciente")
@@ -50,8 +69,8 @@ export const QueryInicial = () => {
         });
       })
     });
-
   })
+  
 
 
 
@@ -75,7 +94,6 @@ export const SelectPacientes = async (db) => {
     tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
       console.log("Exito en buscar pacientes");
       let row = results.rows.item(i);
-      console.log("8888888888888888888")
       console.log($results.rows.item(0).dni)
     })
   });
