@@ -34,8 +34,8 @@ props.db.transaction((tx) => {
       for (let i = 0; i < len; i++) {
         let row = results.rows.item(i);
       //  console.log(`dni : ${row.dni}`);
-       // console.log(`nombre : ${row.nombre}`);
-         // console.log(`apellido : ${row.apellido}`);
+      // console.log(`nombre : ${row.nombre}`);
+     // console.log(`apellido : ${row.apellido}`);
         newData.push({nombre:row.nombre,apellido:row.apellido,dni:row.dni})
         setTableData(newData)
       
@@ -44,9 +44,7 @@ props.db.transaction((tx) => {
 }); 
 }
 }
-/* 
-console.log("BD EN TABLA PACIENTES")
-console.log(props.db) */
+
 
 
 const updatePaciente = pacienteNuevo => {
@@ -63,183 +61,7 @@ const updatePaciente = pacienteNuevo => {
 
   } 
   const [tableData, setTableData] = useState ([]) 
-
-  
-/* let dniEncontrado = -1;
-   props.db.transaction( async (tx) => {
-   console.log("busco tabla en tablaPacientes")
-   await tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
-      console.log("Query completed");
-
-
-      var len = results.rows.length;
-      for (let i = 0; i < len; i++) {
-        let row = results.rows.item(i);
-        console.log(`dni : ${row.dni}`);
-        dniEncontrado = row.dni
-      }
-    });
-  });  */
-
-
- /*  const [tableData, setTableData] = useState([
-    { nombre: "Juan", apellido: "1", dni: "1", cama: "1", estado: "bien", edad:85, genero:'M',
-            estadoClinico:{
-                icc:'no',
-                epoc:'no',
-                diabetes:'no',
-                frecuenciaRespiratoria:12,
-                saturacionOxigeno: 92,
-                saturacionOxigenoEpoc:85 ,
-                oxigenoSuplementario: 'no',
-                presionSistolitica:100,
-                frecuenciaCardiaca:51,
-                temperatura:36,
-                dienea:'si',
-                dimeroD:1100,
-                linfopenia:1200,
-                proteinaC:95,
-                urgencia:'Sin riesgo',
-                puntaje:0,
-            }},
-    { nombre: "Juan", apellido: "2", dni: "2", cama: "2", estado: "bien" , edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'Sin riesgo',
-        puntaje:0,
-    }},
-    { nombre: "Juan", apellido: "3", dni: "3", cama: "3", estado: "bien", edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'Sin riesgo',
-        puntaje:0
-    } },
-    { nombre: "Juan", apellido: "5", dni: "5", cama: "5", estado: "bien", edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'Sin riesgo',
-        puntaje:0,
-    } },
-    { nombre: "Juan", apellido: "6", dni: "6", cama: "5", estado: "bien" , edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'Sin riesgo',
-        puntaje:0,
-    }},
-    { nombre: "Juan", apellido: "7", dni: "7", cama: "5", estado: "bien" , edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'bajo',
-        puntaje:3,
-    }},
-    { nombre: "Juan", apellido: "8", dni: "8", cama: "5", estado: "bien" , edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'moderado',
-        puntaje:4,
-    }},
-    { nombre: "Juan", apellido: "9", dni: "9", cama: "5", estado: "bien" , edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'alto',
-        puntaje:10,
-    }},
-  ]); */
-
-
-
-  const tableHead = ["Nombre", "Apellido", "DNI", "CAMA"];
+  const tableHead = ["Nombre", "Apellido", "DNI"];
 
   const [visibleDetalle, setVisibleDetalle] = useState(false);
 

@@ -8,63 +8,22 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import _ from 'lodash';
 //import { openDatabase } from 'react-native-sqlite-storage';
-import { QueryInicial } from "./baseDatos/Querys";
+import { QueryInicial, db } from "./baseDatos/Querys";
 import * as SQLite from 'expo-sqlite';
 
 //Llama a la bd y crea las tablas
-if(db ==null ){
-var db = QueryInicial();
-}
+if(db ==null )
+  var db2 = QueryInicial();
+else 
+  var db2 = db;
 
-/* const db = SQLite.openDatabase("db.db");
- 
-  
-
-
-db.transaction((tx) =>{
-  console.log("Dropeo la tabla Paciente")
-  tx.executeSql('DROP TABLE Paciente',[],(txt,results)=>
-  console.log("Dropeo exitoso"))
-}) */
-/* 
-db.transaction((tx ) => {
-  console.log("creo trabla de paciente")
-  tx.executeSql('CREATE TABLE Paciente(dni INTEGER PRIMARY KEY, nombre VARCHAR(20),apellido VARCHAR(20), genero varchar(20))',[],(tx,results)=>{
-  console.log("Creacion de tabla exitosa")
-  console.log(results)})
-});
- 
-
-db.transaction((tx ) => {
-  console.log("inserto en tabla paciente")
-  tx.executeSql('INSERT INTO Paciente (dni, nombre,apellido,genero) VALUES (1,"Juan","Perez","M")',[],(tx,results)=>{
-  console.log("insersion exitosa")
-  console.log(results)})
-
-});
-
-db.transaction((tx) => {
-  console.log("busco tabla")
-  tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
-      console.log("Query completed");
-
-    
-      var len = results.rows.length;
-      for (let i = 0; i < len; i++) {
-        let row = results.rows.item(i);
-        console.log(`dni : ${row.dni}`);
-      }
-    });
-}); */
-
- 
 
 
 const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const MaterialBottomTabs = createMaterialBottomTabNavigator();
 const MaterialTopTabs  = createMaterialTopTabNavigator();
-console.log(db)
+
 
 function HomeScreen({ navigation }) {
   return (
@@ -78,7 +37,7 @@ function HomeScreen({ navigation }) {
 function PacientesScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <PacientesComponent navigation={navigation} db ={db}/>
+      <PacientesComponent navigation={navigation} db ={db2}/>
     </View>
   );
 }
