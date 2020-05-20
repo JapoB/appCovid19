@@ -1,79 +1,163 @@
-import React, { useState, useEffect } from 'react';
-import { Container, Header, Content, Form, Item, Picker, Icon, Left, Button, Right, Body, Title, View } from 'native-base';
+import React, { useState } from 'react';
+import { StyleSheet, Alert } from 'react-native'
+import { Container, Header, Content, Form, Item, Label, Icon, Left, Button, Body, Title, View, Text, Input } from 'native-base';
 import * as Font from 'expo-font'
+
+import * as SQLite from 'expo-sqlite'
+
+const db = SQLite.openDatabase('db.db')
 
 export default function AddSignoVital(props) {
 
-  const [selected2, setSelected2] = useState(undefined)
-  const [fontLoaded, setFontLoaded] = useState(false)
- 
-  useEffect(() => {
-    if (!fontLoaded) {
-      loadFonts();
-    }
-  })
+  const [idHospital, setIdHospital] = useState('')
+  const [idHC, setIdHC] = useState(props.dni)
+  const [fecha, setFecha] = useState('')
+  const [frecResp, setFrecResp] = useState('')
+  const [satOxi, setSatOxi] = useState('')
+  const [satEpoc, setSatEpoc] = useState('')
+  const [presSist, setPresSist] = useState('')
+  const [frecCard, setFrecCard] = useState('')
+  const [temp, setTemp] = useState('')
+  const [auditoria, setAuditoria] = useState('')
+  const [errorMsg, setErrorMsg] = useState('')
 
-  const loadFonts = async () =>{
-    await Font.loadAsync({
-        'Roboto_medium': require('../../node_modules/native-base/Fonts/Roboto_medium.ttf')
 
+/*   console.log('El dni pasaso es: ' + props.dni) */
+
+
+  function submit(){
+    if (frecResp == '' || satOxi == '' || satEpoc == '' || presSist == '' || frecCard == '' || temp == '') {
+      Alert.alert('Los campos marcados con * son obligatorios')
+    }else{
+      setFecha(toString(new Date()))
+      db.transaction((tx)=>{
+        var query = 'INSERT INTO signos_vitales (id_hospital, id_HC, fecha, frec_resp, sat_oxi, sat_epoc, presSist, frec_card, temp, auditoria) VALUES (?,?,?,?,?,?,?,?,?,?)'
+        var params = [1, idHC, fecha, frecResp, satOxi, satEpoc, presSist, frecCard, temp, auditoria]
+        tx.executeSql(query, params, (tx, results)=>{
+          
+        },(tx, err)=>{})
+      },(err)=>{},()=>{
+        console.log('Carga de dato ok')
+        resetValores()
       })
-      setFontLoaded(true)
+    }
   }
 
-  if (!fontLoaded) {
-    return(<View/>)
+  function resetValores(){
+    setFrecCard('')
+    setFrecResp('')
+    setSatOxi('')
+    setSatEpoc('')
+    setPresSist('')
+    setTemp('')
+    setAuditoria('')
+    props.navigation.navigate('SignoVital')
   }
 
-  
-   
-  const onValueChange2 = (value)=>{
-    setSelected2(value);
-  }
+  return (
 
-    return (
-      <Container>
-        <Header>
-          <Left>
-            <Button transparent
-              onPress={()=> props.navigation.navigate('Home')}
-            >
-              <Icon name='arrow-back' />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Header</Title>
-          </Body>
-          <Right>
-            <Button transparent>
-              <Icon name='menu' />
-            </Button>
-          </Right>
-        </Header>
-        <Content>
-          <Form>
-            <Item picker>
-              <Picker
-                mode="dropdown"
-             
-                style={{ width: '100%' }}
-                placeholder="Select your SIM"
-                placeholderStyle={{ color: "#bfc6ea" }}
-                placeholderIconColor="#007aff"
-                selectedValue={selected2}
-                onValueChange={onValueChange2.bind(this)}
-              >
-                <Picker.Item label="Wallet" value="key0" />
-                <Picker.Item label="ATM Card" value="key1" />
-                <Picker.Item label="Debit Card" value="key2" />
-                <Picker.Item label="Credit Card" value="key3" />
-                <Picker.Item label="Net Banking" value="key4" />
-              </Picker>
+    <Container style={styles.container}>
+      <Header>
+        <Left>
+          <Button transparent
+            onPress={() => resetValores()}
+          >
+            <Icon name='arrow-back' />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Signos Vitales</Title>
+          <Title>Nombre de paciente</Title>
+        </Body>
+
+      </Header>
+      <Content style={styles.container}>
+        <Form>
+          <View style={{flex:1, alignItems:'flex-end'}}>
+            <Text><Text style={{color:'red'}}>*</Text> campo obligatorio</Text>
+          </View>
+          <Item floatingLabel>
+            <Label>Frecuencia respiratoria <Text style={{color:'red'}}>*</Text></Label>
+            <Input
+              onChangeText={(val) => {setFrecResp(val)}}
+              value={frecResp}
+              />
             </Item>
-          </Form>
-        </Content>
-      </Container>
-    );
-  
+
+            <Item floatingLabel>
+            <Label>Sat. Oxígeno <Text style={{color:'red'}}>*</Text></Label>
+            <Input 
+             onChangeText={(val) => {setSatOxi(val)}}
+             value={satOxi}
+             />
+          </Item>
+
+          <Item floatingLabel>
+            <Label>Sat. Oxíg. EPOC <Text style={{color:'red'}}>*</Text></Label>
+            <Input 
+             onChangeText={(val) => {setSatEpoc(val)}}
+             value={satEpoc}
+             />
+          </Item>
+
+          <Item floatingLabel>
+            <Label>Presión Sistólica <Text style={{color:'red'}}>*</Text></Label>
+            <Input 
+            onChangeText={(val) => {setPresSist(val)}}
+            value={presSist}
+            />
+          </Item>
+
+          <Item floatingLabel>
+            <Label>Frecuencia Cardíaca <Text style={{color:'red'}}>*</Text></Label>
+            <Input 
+            onChangeText={(val) => {setFrecCard(val)}}
+            value={frecCard}
+            />
+          </Item>
+
+          <Item floatingLabel>
+            <Label>Temperatura <Text style={{color:'red'}}>*</Text></Label>
+            <Input 
+            onChangeText={(val) => {setTemp(val)}}
+            value={temp}
+            />
+          </Item>
+
+          <Item floatingLabel last>
+            <Label>Auditoria</Label>
+            <Input 
+            onChangeText={(val) => {setAuditoria(val)}}
+            value={auditoria}
+            />
+          </Item>
+
+          <View style={styles.button}>
+            <Button 
+              onPress={()=>{submit()}}
+            >
+              <Text >Guardar</Text>
+            </Button>
+          </View>
+
+        </Form>
+      </Content>
+    </Container>
+
+  );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    width: '100%'
+  },
+  button: {
+    marginTop: 25,
+
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
+  }
+
+})
 

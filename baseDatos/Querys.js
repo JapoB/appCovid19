@@ -38,20 +38,7 @@ export const QueryInicial = () => {
                 for (let i = 0; i < len; i++) {
                   let row = results.rows.item(i);
                   console.log(`dni : ${row.dni}`);
-                  
-                  db.transaction((tx) => {
-                    var query = 'CREATE TABLE IF NOT EXISTS signos_vitales (id_hospital INTEGER, id_HC INTEGER, fecha TEXT, fec_resp INTEGER, sat_oxi INTEGER, sat_epoc INTEGER,presSist INTEGER, frec_card INTEGER, temp REAL, auditoria TEXT)'
-                    var params = []
-                    tx.executeSql(query, params, (tx, res) => {
-                        console.log('Tabla signos vitales creada')
-                    }, (tx, err) => {
-                        console.log('Tabla signos vitales no pudo ser creada')
-                
-                    })
-                }, (err) => {
-                    console.log(err)
-                }, () => { });
-                
+                                  
                 }
               });
             });
@@ -64,7 +51,7 @@ export const QueryInicial = () => {
 
   function cargaTablaSignosVitales(){
     db.transaction((tx) => {
-      var query = 'CREATE TABLE IF NOT EXISTS signos_vitales (id_hospital INTEGER, id_HC INTEGER, fecha TEXT, fec_resp INTEGER, sat_oxi INTEGER, sat_epoc INTEGER,presSist INTEGER, frec_card INTEGER, temp REAL, auditoria TEXT)'
+      var query = 'CREATE TABLE IF NOT EXISTS signos_vitales (id INTEGER PRIMARY KEY NOT NULL, id_hospital INTEGER, id_HC INTEGER, fecha TEXT, fec_resp INTEGER, sat_oxi INTEGER, sat_epoc INTEGER,presSist INTEGER, frec_card INTEGER, temp REAL, auditoria TEXT)'
       var params = []
       tx.executeSql(query, params, (tx, res) => {
           console.log('Tabla signos vitales creada')

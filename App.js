@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, Text, View, Button } from "react-native";
 
 
@@ -17,7 +17,7 @@ import _ from 'lodash';
 import { QueryInicial } from "./baseDatos/Querys";
 import * as SQLite from 'expo-sqlite';
 import SignoVital from "./components/signoVital/SignoVitalComponent";
-
+import * as Font from 'expo-font'
 
 
 //Llama a la bd y crea las tablas
@@ -28,6 +28,7 @@ const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const MaterialBottomTabs = createMaterialBottomTabNavigator();
 const MaterialTopTabs = createMaterialTopTabNavigator();
+
 
 
 function HomeScreen({ navigation }) {
@@ -68,7 +69,7 @@ function SignoVitalScreen({ navigation }) {
 function AddSignoVitalScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <AddSignoVitalComponent navigation={navigation} db={db}/>
+      <AddSignoVitalComponent navigation={navigation} dni={1}/>
     </View>
   );
 }
@@ -77,6 +78,11 @@ function AddSignoVitalScreen({ navigation }) {
 
 export default function App() {
   console.disableYellowBox = true;
+
+
+    Font.loadAsync({
+          'Roboto_medium': require('./node_modules/native-base/Fonts/Roboto_medium.ttf')
+        })
 
 
 
