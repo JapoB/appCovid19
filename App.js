@@ -12,10 +12,10 @@ import { QueryInicial, db } from "./baseDatos/Querys";
 import * as SQLite from 'expo-sqlite';
 
 //Llama a la bd y crea las tablas
-if(db ==null )
+//if(db ==null )
   var db2 = QueryInicial();
-else 
-  var db2 = db;
+//else 
+  //var db2 = db;
 
 
 

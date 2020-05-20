@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 
 import * as SQLite from 'expo-sqlite';
-//import SQLite from 'react-native-sqlite-storage';
-import { openDatabase } from 'react-native-sqlite-storage';
+
+
 
 export const db = SQLite.openDatabase("db.db");
-
 export const QueryInicial = () => {
 
 

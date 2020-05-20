@@ -11,39 +11,35 @@ import {
 } from "react-native";
 import DetallePacienteComponent from "./DetallePacienteComponent";
 import _ from 'lodash';
-import { SelectPacientes } from "../../baseDatos/Querys";
+
 import { QueryInicial, db } from "../../baseDatos/Querys";
 
 
 
 const TablaPacientesComponent = (props) => {
- 
 
+const selectPacientes = () =>{
+  if(props.db!=null){
+    props.db.transaction((tx) => {
+      tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
+          var len = results.rows.length;
+        
+          var newData=[]
+          for (let i = 0; i < len; i++) {
+            let row = results.rows.item(i);
+          //  console.log(`dni : ${row.dni}`);
+          // console.log(`nombre : ${row.nombre}`);
+         // console.log(`apellido : ${row.apellido}`);
+          //  newData.push({nombre:row.nombre,apellido:row.apellido,dni:row.dni})
+          newData.push(row)
+          setTableData(newData)
+         
+          }
+        });
+    }); 
+    }
+  }
 
-
-const buscoPaciente = () =>{
-
-console.log("busco pacientes")
-if(props.db!=null){
-props.db.transaction((tx) => {
-  console.log("busco tabla en tabla pacientes")
-  tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
-      console.log("Query completed de tabla pacientes");
-      var len = results.rows.length;
-      var newData=[]
-      for (let i = 0; i < len; i++) {
-        let row = results.rows.item(i);
-      //  console.log(`dni : ${row.dni}`);
-      // console.log(`nombre : ${row.nombre}`);
-     // console.log(`apellido : ${row.apellido}`);
-        newData.push({nombre:row.nombre,apellido:row.apellido,dni:row.dni})
-        setTableData(newData)
-      
-      }
-    });
-}); 
-}
-}
 
 
 
@@ -65,7 +61,7 @@ const updatePaciente = pacienteNuevo => {
 
   const [visibleDetalle, setVisibleDetalle] = useState(false);
 
-  const [tableDetalle, setTableDetalle] = useState([]);
+  const [tableDetalle, setTableDetalle] = useState(selectPacientes);
   const [paciente, setPaciente] = useState(  { nombre: "Juan", apellido: "3", dni: "3", cama: "3", estado: "bien", edad:50, genero:'M',
   estadoClinico:{
       icc:'no',
@@ -148,7 +144,6 @@ const updatePaciente = pacienteNuevo => {
         />
       </ScrollView>
 
-      <Button title="Recargar" onPress={buscoPaciente}/> 
 
       <DetallePacienteComponent
         visible={visibleDetalle}
