@@ -11,15 +11,14 @@ import _ from 'lodash';
 import { QueryInicial } from "./baseDatos/Querys";
 import * as SQLite from 'expo-sqlite';
 
- 
-
 //Llama a la bd y crea las tablas
+if(db ==null ){
 var db = QueryInicial();
+}
 
 /* const db = SQLite.openDatabase("db.db");
  
   
-console.log("**************************************************")
 
 
 db.transaction((tx) =>{
@@ -34,7 +33,7 @@ db.transaction((tx ) => {
   console.log("Creacion de tabla exitosa")
   console.log(results)})
 });
-
+ 
 
 db.transaction((tx ) => {
   console.log("inserto en tabla paciente")
@@ -65,7 +64,7 @@ const Drawer = createDrawerNavigator();
 const Stack = createStackNavigator();
 const MaterialBottomTabs = createMaterialBottomTabNavigator();
 const MaterialTopTabs  = createMaterialTopTabNavigator();
-
+console.log(db)
 
 function HomeScreen({ navigation }) {
   return (

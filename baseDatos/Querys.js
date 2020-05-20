@@ -4,11 +4,12 @@ import * as SQLite from 'expo-sqlite';
 //import SQLite from 'react-native-sqlite-storage';
 import { openDatabase } from 'react-native-sqlite-storage';
 
-
+export const db = SQLite.openDatabase("db.db");
 
 export const QueryInicial = () => {
 
-  const db = SQLite.openDatabase("db.db");
+
+  
   db.transaction((tx) => {
     console.log("Intento dropear hospital")
       tx.executeSql('DROP TABLE Hospital',[],() => {
@@ -43,28 +44,40 @@ export const QueryInicial = () => {
       'fechaNac date, fechaIngreso date, idHospital INT ,PRIMARY KEY (dni,tipoDocumento)'+
       'FOREIGN KEY (idHospital) REFERENCES Hospital (id))', [], () => {
         console.log("Creacion de tabla Paciente exitosa")
-      }, ()=>{ }, () => {
-
         db.transaction((tx) => {
-          console.log("inserto en tabla paciente")
-          tx.executeSql('INSERT INTO Paciente (dni, nombre,apellido,genero) VALUES (1,"Juan","Perez","M")', [], (tx, results) => {
+          console.log("inserto en tabla hospital")
+          tx.executeSql('INSERT INTO Hospital (id, nombre,calle,numero,CP,planoCamas) VALUES (1,"Castro","Bs As","400","8300","Este es el plano")', [], (tx, results) => {
             console.log("insersion exitosa")
           })
-
         }, () => { }, () => {
           db.transaction((tx) => {
-            console.log("busco tabla")
-            tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
-              console.log("Query completed");
+            console.log("busco tabla hospital")
+            tx.executeSql('SELECT * FROM Hospital', [], (tx, results) => {
+              console.log("Query busqueda hospital completed");
 
 
               var len = results.rows.length;
               for (let i = 0; i < len; i++) {
                 let row = results.rows.item(i);
-                console.log(`dni : ${row.dni}`);
+                console.log(`id : ${row.id}`);
               }
-              return db;
+            
             });
+          },()=>{},()=>{
+            db.transaction((tx)=>{
+              console.log("Inserto en la tabla de pacientes")
+              tx.executeSql("Insert into Paciente (dni, tipoDocumento,nombre,apellido,genero,"+
+                "paisExp,nacionalidad,calle,numero,piso,depto,CP,telefono,telefonoFamiliar,telefonoFamiliar2,idHospital)"+
+                "VALUES (1,'dni','juan','Moreno','M','Arg','Arg','calle falsa','123','2','B','8300','123123','123332','333211',1),"+
+                "(2,'dni','Pedro','Ramirez','M','Arg','Arg','calle falsa','123','2','B','8300','123123','123332','333211',1)",
+                [],()=>{
+                  console.log("Insercion en pacientes exitosa")
+                
+                })
+           
+              },()=>{},()=>{
+               
+            })
           });
         });
       })
@@ -73,7 +86,7 @@ export const QueryInicial = () => {
   
 
 
-
+  return db;
 
 
 

@@ -12,11 +12,41 @@ import {
 import DetallePacienteComponent from "./DetallePacienteComponent";
 import _ from 'lodash';
 import { SelectPacientes } from "../../baseDatos/Querys";
- 
+import { QueryInicial, db } from "../../baseDatos/Querys";
+
 
 
 const TablaPacientesComponent = (props) => {
+ 
 
+
+
+const buscoPaciente = () =>{
+
+console.log("busco pacientes")
+if(props.db!=null){
+props.db.transaction((tx) => {
+  console.log("busco tabla en tabla pacientes")
+  tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
+      console.log("Query completed de tabla pacientes");
+      var len = results.rows.length;
+      var newData=[]
+      for (let i = 0; i < len; i++) {
+        let row = results.rows.item(i);
+      //  console.log(`dni : ${row.dni}`);
+       // console.log(`nombre : ${row.nombre}`);
+         // console.log(`apellido : ${row.apellido}`);
+        newData.push({nombre:row.nombre,apellido:row.apellido,dni:row.dni})
+        setTableData(newData)
+      
+      }
+    });
+}); 
+}
+}
+/* 
+console.log("BD EN TABLA PACIENTES")
+console.log(props.db) */
 
 
 const updatePaciente = pacienteNuevo => {
@@ -52,24 +82,6 @@ const updatePaciente = pacienteNuevo => {
   });  */
 
 
-
-const att = async () => {
-
-
-await db.transaction((tx) => {
-  console.log("busco tabla en tabla pacientes")
-  tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
-      console.log("Query completed de tabla pacientes");
- 
-
-      var len = results.rows.length;
-      for (let i = 0; i < len; i++) {
-        let row = results.rows.item(i);
-        console.log(`dni : ${row.dni}`);
-      }
-    });
-});
-}
  /*  const [tableData, setTableData] = useState([
     { nombre: "Juan", apellido: "1", dni: "1", cama: "1", estado: "bien", edad:85, genero:'M',
             estadoClinico:{
@@ -297,15 +309,15 @@ await db.transaction((tx) => {
           renderItem={(itemData) => (
          
          <TouchableOpacity onPress={() => openModal(itemData.item)}>
-             
-              <View style={getStylePuntaje(itemData.item.estadoClinico.urgencia)}>
+             {/*  <View style={getStylePuntaje(itemData.item.estadoClinico.urgencia)}></View> */}
+              <View style={styles.item}>
                 <Text>{itemData.item.nombre}</Text>
 
                 <Text>{itemData.item.apellido}</Text>
 
                 <Text>{itemData.item.dni}</Text>
 
-                <Text>{itemData.item.cama}</Text>
+          
               </View>
               
         
@@ -313,6 +325,8 @@ await db.transaction((tx) => {
           )}
         />
       </ScrollView>
+
+      <Button title="Recargar" onPress={buscoPaciente}/> 
 
       <DetallePacienteComponent
         visible={visibleDetalle}
