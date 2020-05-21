@@ -24,6 +24,7 @@ export default class SignoVital extends Component {
             var params = []
             tx.executeSql(query, params, (tx, results) => {
                 console.log('Tabla signos vitales creada')
+                this.setState({loading:false})
             }, (tx, err) => {
                 console.log('Tabla signos vitales no pudo ser creada')
 
@@ -34,7 +35,7 @@ export default class SignoVital extends Component {
     }
 
 
-
+    //Se ejecuta despues de cargar el componente
     async componentDidMount() {
         const { search } = this.state
         await this.fetchData(search)
@@ -50,12 +51,12 @@ export default class SignoVital extends Component {
             var query = "SELECT * FROM signos_vitales WHERE id_HC LIKE '%" + search + "%'";
             var params = []
             tx.executeSql(query, params, (tx, results) => {
-                console.log(results.rows._array)
+                
                 if (results.rows._array.length > 0) {
                     this.setState({ signos: results.rows._array })
-                    this.setState({ loading: false })
+
                 }
-                console.log('Datos cargados')
+               
             }, (tx, err) => {
                 console.log('Datos signos vitales no se pudieron cargar')
             })
@@ -64,12 +65,14 @@ export default class SignoVital extends Component {
     }
 
     handleAdd() {
-        this.props.navigation.navigate('AddSignoVital', {dni: this.props.dni})
+        this.props.navigation.navigate('AddSignoVital', {dni: this.props.dni, idHospital:this.props.idHospital})
     }
 
     render() {
 
-
+        let val = ''
+        this.fetchData(val)
+    
         function Item({ title }) {
             return (
                 <View style={styles.item}>
@@ -104,7 +107,20 @@ export default class SignoVital extends Component {
                 <Text style={{textAlign:'center'}} >Hola</Text>
                 <FlatList
                     data={this.state.signos}
-                    renderItem={({ item }) => <Item title={item.temp} />}
+                    renderItem={({ item }) => {
+                        return(<View style={styles.item}>
+                            
+                            <Text style={styles.title}>Fecha: {item.fecha}</Text>
+                            <Text style={styles.title}>Pres.Sistólica: {item.presSist}</Text>
+                            <Text style={styles.title}>Frec.Respiratoria.: {item.frec_resp}</Text>
+                            <Text style={styles.title}>Sat.Oxígeno: {item.sat_oxi}</Text>
+                            <Text style={styles.title}>Sat.Oxígeno EPOC: {item.sat_epoc}</Text>
+                            <Text style={styles.title}>Frec.Cardíaca: {item.frec_Card}</Text>
+                            <Text style={styles.title}>Temperatura: {item.temp}</Text>
+                            <Text style={styles.title}>Auditoria: {item.auditoria}</Text>
+                        </View>)
+                    }
+                    }
                     keyExtractor={item => item.id}
                 />
            
@@ -121,13 +137,14 @@ const styles = StyleSheet.create({
         width:'100%'
     },
     item: {
-        backgroundColor: '#f9c2ff',
+        flex:1,
+        backgroundColor: '#ddd',
         padding: 20,
         marginVertical: 8,
         marginHorizontal: 16,
     },
     title: {
-        fontSize: 32,
+        fontSize: 15,
     },
 });
 

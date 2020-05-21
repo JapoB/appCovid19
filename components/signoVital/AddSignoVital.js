@@ -9,7 +9,7 @@ const db = SQLite.openDatabase('db.db')
 
 export default function AddSignoVital(props) {
 
-  const [idHospital, setIdHospital] = useState('')
+  const [idHospital, setIdHospital] = useState(props.idHospital)
   const [idHC, setIdHC] = useState(props.dni)
   const [fecha, setFecha] = useState('')
   const [frecResp, setFrecResp] = useState('')
@@ -29,21 +29,25 @@ export default function AddSignoVital(props) {
     if (frecResp == '' || satOxi == '' || satEpoc == '' || presSist == '' || frecCard == '' || temp == '') {
       Alert.alert('Los campos marcados con * son obligatorios')
     }else{
-      setFecha(toString(new Date()))
+      var date = new Date()
+      date = date.toString()
+      console.log(date)
+      setFecha(date)
       db.transaction((tx)=>{
-        var query = 'INSERT INTO signos_vitales (id_hospital, id_HC, fecha, frec_resp, sat_oxi, sat_epoc, presSist, frec_card, temp, auditoria) VALUES (?,?,?,?,?,?,?,?,?,?)'
-        var params = [1, idHC, fecha, frecResp, satOxi, satEpoc, presSist, frecCard, temp, auditoria]
+        var query = 'INSERT INTO signos_vitales (id, id_hospital, id_HC, fecha, frec_resp, sat_oxi, sat_epoc, presSist, frec_card, temp, auditoria) VALUES (null, ?,?,?,?,?,?,?,?,?,?)'
+        var params = [idHospital, idHC, fecha, frecResp, satOxi, satEpoc, presSist, frecCard, temp, auditoria]
         tx.executeSql(query, params, (tx, results)=>{
           
         },(tx, err)=>{})
       },(err)=>{},()=>{
         console.log('Carga de dato ok')
-        resetValores()
+        Alert.alert('Datos cargados correctamente')
+        handleBack()
       })
     }
   }
 
-  function resetValores(){
+  function handleBack(){
     setFrecCard('')
     setFrecResp('')
     setSatOxi('')
@@ -60,7 +64,7 @@ export default function AddSignoVital(props) {
       <Header>
         <Left>
           <Button transparent
-            onPress={() => resetValores()}
+            onPress={() => handleBack()}
           >
             <Icon name='arrow-back' />
           </Button>

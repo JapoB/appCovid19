@@ -43,9 +43,9 @@ function HomeScreen({ navigation }) {
       <View style={{ marginTop: 10 }}>
         <Button title="Ver Signos Vitales" onPress={() => navigation.navigate('SignoVital')} />
       </View>
-      <View style={{ marginTop: 10 }}>
+      {/* <View style={{ marginTop: 10 }}>
         <Button title="Cargar Signos Vitales" onPress={() => navigation.navigate('AddSignoVital')} />
-      </View>
+      </View> */}
 
 
     </View>
@@ -69,7 +69,7 @@ function SignoVitalScreen({ navigation }) {
 function AddSignoVitalScreen({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <AddSignoVitalComponent navigation={navigation} dni={1}/>
+      <AddSignoVitalComponent navigation={navigation} dni={1} idHospital={1}/>
     </View>
   );
 }
