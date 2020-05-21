@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Alert } from 'react-native'
 import { Container, Header, Content, Form, Item, Label, Icon, Left, Button, Body, Title, View, Text, Input } from 'native-base';
-import * as Font from 'expo-font'
+
 
 import * as SQLite from 'expo-sqlite'
 

@@ -6,6 +6,7 @@ import { StyleSheet, Text, View, Button } from "react-native";
 import PacientesComponent from "./components/paciente/PacientesComponent";
 import SignoVitalComponent from "./components/signoVital/SignoVitalComponent";
 import AddSignoVitalComponent from "./components/signoVital/AddSignoVital"
+import EditSignoVitalComponent from "./components/signoVital/EditSignoVital"
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
@@ -15,8 +16,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import _ from 'lodash';
 //import { openDatabase } from 'react-native-sqlite-storage';
 import { QueryInicial } from "./baseDatos/Querys";
-import * as SQLite from 'expo-sqlite';
-import SignoVital from "./components/signoVital/SignoVitalComponent";
+
 import * as Font from 'expo-font'
 
 
@@ -43,9 +43,7 @@ function HomeScreen({ navigation }) {
       <View style={{ marginTop: 10 }}>
         <Button title="Ver Signos Vitales" onPress={() => navigation.navigate('SignoVital')} />
       </View>
-      {/* <View style={{ marginTop: 10 }}>
-        <Button title="Cargar Signos Vitales" onPress={() => navigation.navigate('AddSignoVital')} />
-      </View> */}
+
 
 
     </View>
@@ -73,6 +71,13 @@ function AddSignoVitalScreen({ navigation }) {
     </View>
   );
 }
+function EditSignoVitalScreen({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+      <EditSignoVitalComponent navigation={navigation} />
+    </View>
+  );
+}
 
 
 
@@ -93,6 +98,7 @@ export default function App() {
         <Drawer.Screen name="Pacientes" component={PacientesScreen} />
         <Drawer.Screen name="SignoVital" component={SignoVitalScreen} options={{ title: 'Signos Vitales' }} />
         <Drawer.Screen name="AddSignoVital" component={AddSignoVitalScreen} options={{ title: 'Cargar Signos Vitales' }} />
+        <Drawer.Screen name="EditSignoVital" component={EditSignoVitalScreen} options={{ title: 'Editar Signos Vitales' }} />
 
       </Drawer.Navigator>
     </NavigationContainer>
