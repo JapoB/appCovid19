@@ -5,13 +5,10 @@ import TablaPacientesComponent from './TablaPacientesComponent'
 
 const PacientesComponent = (props) => {
 
-  
-
-
     return (
       
      <View>  
-         <TablaPacientesComponent/>
+         <TablaPacientesComponent db={props.db}/>
           <Button title="Menu Principal" onPress={() =>props.navigation.navigate('Home')}/> 
      </View>
 
@@ -19,6 +16,8 @@ const PacientesComponent = (props) => {
 
     );
 
+
+    
 }   
 
 export default PacientesComponent;

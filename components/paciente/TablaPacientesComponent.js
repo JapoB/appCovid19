@@ -12,8 +12,34 @@ import {
 import DetallePacienteComponent from "./DetallePacienteComponent";
 import _ from 'lodash';
 
+import { QueryInicial, db } from "../../baseDatos/Querys";
+
+
 
 const TablaPacientesComponent = (props) => {
+
+const selectPacientes = () =>{
+  if(props.db!=null){
+    props.db.transaction((tx) => {
+      tx.executeSql('SELECT * FROM Paciente', [], (tx, results) => {
+          var len = results.rows.length;
+        
+          var newData=[]
+          for (let i = 0; i < len; i++) {
+            let row = results.rows.item(i);
+          //  console.log(`dni : ${row.dni}`);
+          // console.log(`nombre : ${row.nombre}`);
+         // console.log(`apellido : ${row.apellido}`);
+          //  newData.push({nombre:row.nombre,apellido:row.apellido,dni:row.dni})
+          newData.push(row)
+          setTableData(newData)
+         
+          }
+        });
+    }); 
+    }
+  }
+
 
 
 
@@ -30,168 +56,12 @@ const updatePaciente = pacienteNuevo => {
    
 
   } 
-
-
-  const [tableData, setTableData] = useState([
-    { nombre: "Juan", apellido: "1", dni: "1", cama: "1", estado: "bien", edad:85, genero:'M',
-            estadoClinico:{
-                icc:'no',
-                epoc:'no',
-                diabetes:'no',
-                frecuenciaRespiratoria:12,
-                saturacionOxigeno: 92,
-                saturacionOxigenoEpoc:85 ,
-                oxigenoSuplementario: 'no',
-                presionSistolitica:100,
-                frecuenciaCardiaca:51,
-                temperatura:36,
-                dienea:'si',
-                dimeroD:1100,
-                linfopenia:1200,
-                proteinaC:95,
-                urgencia:'Sin riesgo',
-                puntaje:0,
-            }},
-    { nombre: "Juan", apellido: "2", dni: "2", cama: "2", estado: "bien" , edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'Sin riesgo',
-        puntaje:0,
-    }},
-    { nombre: "Juan", apellido: "3", dni: "3", cama: "3", estado: "bien", edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'Sin riesgo',
-        puntaje:0
-    } },
-    { nombre: "Juan", apellido: "5", dni: "5", cama: "5", estado: "bien", edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'Sin riesgo',
-        puntaje:0,
-    } },
-    { nombre: "Juan", apellido: "6", dni: "6", cama: "5", estado: "bien" , edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'Sin riesgo',
-        puntaje:0,
-    }},
-    { nombre: "Juan", apellido: "7", dni: "7", cama: "5", estado: "bien" , edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'bajo',
-        puntaje:3,
-    }},
-    { nombre: "Juan", apellido: "8", dni: "8", cama: "5", estado: "bien" , edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'moderado',
-        puntaje:4,
-    }},
-    { nombre: "Juan", apellido: "9", dni: "9", cama: "5", estado: "bien" , edad:50, genero:'M',
-    estadoClinico:{
-        icc:'no',
-        epoc:'no',
-        diabetes:'no',
-        frecuenciaRespiratoria:12,
-        saturacionOxigeno: 92,
-        saturacionOxigenoEpoc:85 ,
-        oxigenoSuplementario: 'no',
-        presionSistolitica:100,
-        frecuenciaCardiaca:51,
-        temperatura:36,
-        dienea:'si',
-        dimeroD:1100,
-        linfopenia:1200,
-        proteinaC:95,
-        urgencia:'alto',
-        puntaje:10,
-    }},
-  ]);
-
-  const tableHead = ["Nombre", "Apellido", "DNI", "CAMA"];
+  const [tableData, setTableData] = useState ([]) 
+  const tableHead = ["Nombre", "Apellido", "DNI"];
 
   const [visibleDetalle, setVisibleDetalle] = useState(false);
 
-  const [tableDetalle, setTableDetalle] = useState([]);
+  const [tableDetalle, setTableDetalle] = useState(selectPacientes);
   const [paciente, setPaciente] = useState(  { nombre: "Juan", apellido: "3", dni: "3", cama: "3", estado: "bien", edad:50, genero:'M',
   estadoClinico:{
       icc:'no',
@@ -257,15 +127,15 @@ const updatePaciente = pacienteNuevo => {
           renderItem={(itemData) => (
          
          <TouchableOpacity onPress={() => openModal(itemData.item)}>
-             
-              <View style={getStylePuntaje(itemData.item.estadoClinico.urgencia)}>
+             {/*  <View style={getStylePuntaje(itemData.item.estadoClinico.urgencia)}></View> */}
+              <View style={styles.item}>
                 <Text>{itemData.item.nombre}</Text>
 
                 <Text>{itemData.item.apellido}</Text>
 
                 <Text>{itemData.item.dni}</Text>
 
-                <Text>{itemData.item.cama}</Text>
+          
               </View>
               
         
@@ -273,6 +143,7 @@ const updatePaciente = pacienteNuevo => {
           )}
         />
       </ScrollView>
+
 
       <DetallePacienteComponent
         visible={visibleDetalle}

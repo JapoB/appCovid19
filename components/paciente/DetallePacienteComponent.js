@@ -8,13 +8,15 @@ import {
   ScrollView,
   TextInput
 } from "react-native";
+import { db } from "../../baseDatos/Querys";
+
 
 const DetallePacientesComponent = (props) => {
 
 
   const [visibleCargar, setVisibleCargar] = useState(false);
-  const [paciente, setPaciente] = useState(props.paciente)
-  const [lecturaFrecuenciaRespiratoria, setLecturaFrecuenciaRespiratoria] = useState(paciente.estadoClinico.frecuenciaRespiratoria)
+  const [paciente, setPaciente] = useState(joins)
+/*   const [lecturaFrecuenciaRespiratoria, setLecturaFrecuenciaRespiratoria] = useState(paciente.estadoClinico.frecuenciaRespiratoria)
   const [lecturaSaturacionOxigeno, setLecturaSaturacionOxigeno] = useState(paciente.estadoClinico.saturacionOxigeno)
   const [lecturaSaturacionOxigenoEpoc, setLecturaSaturacionOxigenoEpoc] = useState(paciente.estadoClinico.saturacionOxigenoEpoc)
   const [lecturaOxigenoSuplementario, setLecturaOxigenoSuplementario] = useState(paciente.estadoClinico.oxigenoSuplementario)
@@ -24,11 +26,37 @@ const DetallePacientesComponent = (props) => {
   const [lecturaDimero, setLecturaDimero] = useState(paciente.estadoClinico.dimeroD)
   const [lecturaDisnea, setLecturaDisnea] = useState(paciente.estadoClinico.disnea)
   const [lecturaProteinaC, setLecturaProteinaC] = useState(paciente.estadoClinico.proteniaC)
-  const [lecturaTemperatura, setLecturaTemperatura] = useState(paciente.estadoClinico.temperatura)
+  const [lecturaTemperatura, setLecturaTemperatura] = useState(paciente.estadoClinico.temperatura) */
 
   
 
-
+  const joins = () => {
+    console.log("se vienen los joins")
+    if(db!=null){
+      db.transaction((tx) => {
+        tx.executeSql('SELECT * FROM Paciente JOIN SignosVitales ON Paciente.numeroHC = SignosVitales.numeroHC AND paciente.idHospital = SignosVitales.id_hospital'+
+        ' JOIN Laboratorio ON Paciente.numeroHC = Laboratorio.numeroHC AND Paciente.idHospital = Laboratorio.idHospital'+
+        ' JOIN PacienteCama ON Paciente.numeroHC = PacienteCama.numeroHC AND Paciente.idHospital = PacienteCama.idHospital'+
+        ' JOIN Cormobilidades ON Paciente.numeroHC = Cormobilidades.numeroHC AND Paciente.idHospital = Cormobilidades.idHospital'+
+        ' JOIN Alerta ON Paciente.numeroHC = Alerta.numeroHC AND Paciente.idHospital = Alerta.idHospital'+
+        ' WHERE Paciente.numeroHC = ? AND Paciente.idHospital = ?', [props.paciente.numeroHC,props.paciente.idHospital], (tx, results) => {
+            var len = results.rows.length;
+            var newData=[]
+            for (let i = 0; i < len; i++) {
+              let row = results.rows.item(i);
+            //  console.log(`dni : ${row.dni}`);
+            // console.log(`nombre : ${row.nombre}`);
+           // console.log(`apellido : ${row.apellido}`);
+            //  newData.push({nombre:row.nombre,apellido:row.apellido,dni:row.dni})
+            newData.push(row)
+           console.log(row);
+           
+            }
+          },(tx,err)=>{
+            console.log(err)
+          });
+      })}
+  }
 
   const openCargarDatos = () => {
  
@@ -191,16 +219,24 @@ calcularValor(updatePaciente);
 
   setPaciente(updatePaciente)
 
-  console.log("el paciente update que acabo de crear")
-  console.log(updatePaciente)
-   console.log(urgencia);
+ // console.log("el paciente update que acabo de crear")
+ // console.log(updatePaciente)
+  // console.log(urgencia);
 
   props.updatePaciente(updatePaciente);
 
   setVisibleCargar(false);
   
   }
-
+/**
+ * Lo que debo conseguir: gravedad de la ultima alerta
+ * Ultimos Signos vitales
+ * Ultimo Laboratorio
+ * Datos de la cama
+ * Datos de cormobilidades
+ * 
+ * VER DE DONDE CARAJO SALE LA REFIERE DISNEA, NO ESTA EN LAS TABLAS
+ */
 
   if(!visibleCargar){
   return (
@@ -215,16 +251,12 @@ calcularValor(updatePaciente);
           <Text>Nombre: {props.paciente.nombre}</Text>
           <Text>Apellido: {props.paciente.apellido}</Text>
           <Text>Dni: {props.paciente.dni}</Text>
-          <Text>Cama: {props.paciente.cama}</Text>
-          <Text>Estado: {props.paciente.estado}</Text>
-          <Text>Edad: {props.paciente.edad}</Text>
-          <Text>Genero: {props.paciente.genero}</Text>
-          <Text>Icc Grado 2: {props.paciente.estadoClinico.icc}</Text>
-          <Text>Epoc: {props.paciente.estadoClinico.epoc}</Text>
-          <Text>
-            Diabetes con dano en organo blanco: {props.paciente.estadoClinico.diabetes}
-          </Text>
 
+          
+          <Text>Genero: {props.paciente.genero}</Text>
+         
+
+        {/* <Text>Edad: {props.paciente.edad}</Text>
           <Text style={styles.boldi}>Ultimos datos clinicos</Text>
           <Text>Ugencia: {paciente.estadoClinico.urgencia} ({paciente.estadoClinico.puntaje})</Text>
           <Text>Frecuencia respiratoria: {paciente.estadoClinico.frecuenciaRespiratoria}</Text>
@@ -234,10 +266,16 @@ calcularValor(updatePaciente);
           <Text>Presión sistólica: {paciente.estadoClinico.presionSistolitica}</Text>
           <Text>Frecuencia cardiaca: {paciente.estadoClinico.frecuenciaCardiaca}</Text>
           <Text>Temperatura °C: {paciente.estadoClinico.temperatura}</Text>
-          <Text>Refiere Disnea: {paciente.estadoClinico.disnea}</Text>
           <Text>Dimero D: {paciente.estadoClinico.dimeroD}</Text>
           <Text>Linfopenia: {paciente.estadoClinico.linfopenia}</Text>
           <Text>Proteína C reactiva: {paciente.estadoClinico.proteniaC}</Text>
+
+          
+          <Text style={styles.boldi}>Cormobilidades</Text>
+          <Text>ICC grado 2: {paciente.cormobilidades.icc}</Text>
+          <Text>Diabetes con daño en orgnao: {paciente.cormobilidades.diabetes}</Text>
+          <Text>EPOC: {paciente.cormobilidades.epoc}</Text> */}
+
         </View>
       </ScrollView>
     
@@ -246,7 +284,8 @@ calcularValor(updatePaciente);
 
       <View style={styles.botones}>
         <Button title="Cerrar" onPress={props.close.bind(this)} />
-        <Button title="Cargar datos" onPress={openCargarDatos}/>
+       {/*  <Button title="Cargar datos" onPress={openCargarDatos}/> */}
+       <Button title="Joins " onPress={joins}/>
       </View>
     </Modal>
 
