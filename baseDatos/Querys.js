@@ -149,8 +149,8 @@ export const QueryInicial = () => {
               console.log("Inserto en la tabla de pacientes")
               tx.executeSql("Insert into Paciente (dni, tipoDocumento,numeroHC,nombre,apellido,genero,"+
                 "paisExp,nacionalidad,calle,numero,piso,depto,CP,telefono,telefonoFamiliar,telefonoFamiliar2,idHospital)"+
-                "VALUES (1,'dni','juan','Moreno',1,'M','Arg','Arg','calle falsa','123','2','B','8300','123123','123332','333211',1),"+
-                "(2,'dni','Pedro','Ramirez',2,'M','Arg','Arg','calle falsa','123','2','B','8300','123123','123332','333211',1)",
+                "VALUES (1,'dni','1','juan','Moreno','M','Arg','Arg','calle falsa','123','2','B','8300','123123','123332','333211',1),"+
+                "(2,'dni','2','Pedro','Ramirez','M','Arg','Arg','calle falsa','123','2','B','8300','123123','123332','333211',1)",
                 [],()=>{
                   console.log("Insercion en pacientes exitosa")
                 
@@ -249,7 +249,7 @@ export const QueryInicial = () => {
                                 db.transaction((tx)=>{
                                   console.log("Creacion de Cama ")
                                   tx.executeSql("CREATE TABLE Cama ("+
-                                  "idIsla VARCHAR(20), idHospital INT, idSector INT,idCama VARCHAR(20),ubicacionX INT, estado VARCHAR(10), ubicacionY INT,PRIMARY KEY (idIsla,idHospital,idSector,idCama),"+
+                                  "idIsla VARCHAR(20), idHospital INT, idSector INT,idCama VARCHAR(20), estado VARCHAR(10),ubicacionX INT, ubicacionY INT,PRIMARY KEY (idIsla,idHospital,idSector,idCama),"+
                                   "FOREIGN KEY (idHospital) REFERENCES Hospital (id), FOREIGN KEY (idIsla) REFERENCES Isla (idIsla),FOREIGN KEY (idSector) REFERENCES Sector (idSector))"   ,
                                     [],()=>{
                                       console.log("Creacion de tabla Cama exitosa")
@@ -284,7 +284,7 @@ export const QueryInicial = () => {
                                       },()=>{},()=>{
                                         db.transaction((tx)=>{
                                           console.log("Creacion de SignosVitales")
-                                          var query = 'CREATE TABLE IF NOT EXISTS signos_vitales (id INTEGER PRIMARY KEY NOT NULL, id_hospital INTEGER, id_HC INTEGER, fecha TEXT, fec_resp INTEGER, sat_oxi INTEGER, sat_epoc INTEGER,presSist INTEGER, frec_card INTEGER, temp REAL, auditoria VARCHAR(20),FOREIGN KEY (auditoria) REFERENCES Usuario(cuil))'
+                                          var query = 'CREATE TABLE IF NOT EXISTS SignosVitales (id_hospital INTEGER, numeroHC varchar(20), fecha date, fec_resp INTEGER, sat_oxi INTEGER, sat_epoc INTEGER,presSist INTEGER, frec_card INTEGER, temp REAL, auditoria VARCHAR(20),PRIMARY KEY (id_hospital,numeroHC,fecha),FOREIGN KEY (auditoria) REFERENCES Usuario(cuil), FOREIGN KEY (id_hospital) REFERENCES Hospital (id),FOREIGN KEY (numeroHC) REFERENCES paciente (numeroHC))'
                                           var params = []
                                           tx.executeSql(query, params, (tx, res) => {
                                             console.log('Tabla signos vitales creada')
@@ -293,7 +293,126 @@ export const QueryInicial = () => {
                                     
                                         })
                                         },()=>{},()=>{
+                                          db.transaction((tx)=>{
+                                            console.log("Insertar en Usuario")
+                                            var query = "INSERT INTO Usuario (cuil,clave, email,telefono) VALUES"+
+                                            "('1','1','112@email.com','23123')"
+                                            var params = []
+                                            tx.executeSql(query, params, (tx, res) => {
+                                              console.log('Insertar en usuario exitoso')
+                                          }, (tx, err) => {
+                                              console.log('Error al insertar usuario')
+                                              console.log(err)
+                                      
+                                          })
+                                          },()=>{},()=>{
+                                            db.transaction((tx)=>{
+                                              console.log("Insertar en Alerta")
+                                              var query = "INSERT INTO ALERTA (idHospital, numeroHC, fecha, gravedad, calificacion) VALUES "+
+                                              " (1,'1','2018-05-05',1,'normal')"
+                                              var params = []
+                                              tx.executeSql(query, params, (tx, res) => {
+                                                console.log('Insertar en alerta exitoso')
+                                            }, (tx, err) => {
+                                                console.log('Error en insertar Alerta')
+                                        
+                                            })
+                                            },()=>{},()=>{
+                                              db.transaction((tx)=>{
+                                                console.log("Insertar en cormobilidades")
+                                                var query = "INSERT INTO Cormobilidades (idHospital, numeroHC , iccGrado2, epoc, diabetesDanioOrgano, cuil) VALUES "+
+                                                "(1,'1','no','no','no','1')"
+                                                var params = []
+                                                tx.executeSql(query, params, (tx, res) => {
+                                                  console.log('Insertar en cormobilidades exitoso')
+                                              }, (tx, err) => {
+                                                  console.log('error al insertar en cormobilidades')
                                           
+                                              })
+                                              },()=>{},()=>{
+                                                db.transaction((tx)=>{
+                                                  console.log("Insertar en isla")
+                                                  var query = "INSERT INTO Isla (idIsla,idHospital,idLider) VALUES "+
+                                                  "('1',1,1)"
+                                                  var params = []
+                                                  tx.executeSql(query, params, (tx, res) => {
+                                                    console.log('Insertar en Isla exitoso')
+                                                }, (tx, err) => {
+                                                    console.log('Error en insertar Isla')
+                                            
+                                                })
+                                                },()=>{},()=>{
+                                                  db.transaction((tx)=>{
+                                                    console.log("insertar de SignosVitales")
+                                                    var query = "INSERT INTO SignosVitales (id_hospital,numeroHc,fecha,fec_resp,sat_oxi,sat_epoc,presSist,frec_card,temp,auditoria) VALUES "+
+                                                    "(1,'1','2020-01-05',50,15,35,10,60,37,'1')"
+                                                    var params = []
+                                                    tx.executeSql(query, params, (tx, res) => {
+                                                      console.log('Insertar en Signos vitales exitoso')
+                                                  }, (tx, err) => {
+                                                      console.log('error en insertar signos vitales')
+                                                      console.log(err)
+                                              
+                                                  })
+                                                  },()=>{},()=>{
+                                                    db.transaction((tx)=>{
+                                                      console.log("insertar de sector")
+                                                      var query = "INSERT INTO Sector(idIsla,idHospital,idSector) VALUES "+
+                                                      "('1',1,1)"
+                                                       var params = []
+                                                      tx.executeSql(query, params, (tx, res) => {
+                                                        console.log('Insertar en sector exitoso')
+                                                    }, (tx, err) => {
+                                                        console.log('error en insertar en sector')
+                                                
+                                                    })
+                                                    },()=>{},()=>{
+                                                      db.transaction((tx)=>{
+                                                        console.log("insertar de cama")
+                                                        var query = "INSERT INTO Cama (idIsla,idHospital,idSector,idCama,estado,ubicacionX,ubicacionY) VALUES "+
+                                                        "('1',1,'1','cama1','ocupada',45,55)"
+                                                          var params = []
+                                                        tx.executeSql(query, params, (tx, res) => {
+                                                          console.log('insertar en cama exitoso')
+                                                      }, (tx, err) => {
+                                                          console.log('error al insertar en cama')
+                                                  
+                                                      })
+                                                      },()=>{},()=>{
+                                                        db.transaction((tx)=>{
+                                                          console.log("insertar de pacienteCama")
+                                                          var query = "INSERT INTO PacienteCama (numeroHC,idIsla,idHospital,idSector,idCama,cuil,gravedad,fecha) VALUES "+
+                                                          "('1','1',1,'1','cama1','1',1,'2020-05-05')"
+                                                          var params = []
+                                                          tx.executeSql(query, params, (tx, res) => {
+                                                            console.log('insertar en pacienteCama exitoso')
+                                                        }, (tx, err) => {
+                                                            console.log('error en insertar pacienteCama')
+                                                    
+                                                        })
+                                                        },()=>{},()=>{
+                                                          db.transaction((tx)=>{
+                                                            console.log("insertar de Laboratorio")
+                                                            var query = "INSERT INTO Laboratorio (numeroHC,idHospital,fecha,cuil,dimeroD,linfopenia,proteinaC) VALUES "+
+                                                            "('1',1,'2020-05-07','1',15,20,35)"
+                                                             var params = []
+                                                            tx.executeSql(query, params, (tx, res) => {
+                                                              console.log('Insertar en laboratorio exitoso')
+                                                          }, (tx, err) => {
+                                                              console.log('error al insertar en laboratorio')
+                                                      
+                                                          })
+                                                          },()=>{},()=>{
+                                                            
+                                                          })
+                                                        })
+                                                      })
+                                                    })
+                                                  })
+                                                })
+                                              })
+                                            })
+                                          })
                                         })
                                       })
                                     })
