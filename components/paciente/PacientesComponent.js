@@ -8,8 +8,9 @@ const PacientesComponent = (props) => {
     return (
       
      <View>  
-         <TablaPacientesComponent db={props.db}/>
+         <TablaPacientesComponent db={props.db} navigation={props.navigation}/>
           <Button title="Menu Principal" onPress={() =>props.navigation.navigate('Home')}/> 
+          
      </View>
 
 

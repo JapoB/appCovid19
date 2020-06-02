@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-
+import React, { useState ,} from "react";
+import {Alert} from 'react-native'
 import * as SQLite from 'expo-sqlite';
 
 
@@ -148,13 +148,13 @@ export const QueryInicial = () => {
             db.transaction((tx)=>{
               console.log("Inserto en la tabla de pacientes")
               tx.executeSql("Insert into Paciente (dni, tipoDocumento,numeroHC,nombre,apellido,genero,"+
-                "paisExp,nacionalidad,calle,numero,piso,depto,CP,telefono,telefonoFamiliar,telefonoFamiliar2,idHospital)"+
-                "VALUES (1,'dni','1','juan','Moreno','M','Arg','Arg','calle falsa','123','2','B','8300','123123','123332','333211',1),"+
-                "(2,'dni','2','Pedro','Ramirez','M','Arg','Arg','calle falsa','123','2','B','8300','123123','123332','333211',1)",
+                "paisExp,nacionalidad,calle,numero,piso,depto,CP,telefono,telefonoFamiliar,telefonoFamiliar2,fechaNac,fechaIngreso,idHospital)"+
+                "VALUES (1,'dni','1','juan','Moreno','M','Arg','Arg','calle falsa','123','2','B','8300','tele123123','tele123332','tele333211','1990-09-27','2019-09-27',1),"+
+                "(2,'dni','2','Pedro','Ramirez','M','Arg','Arg','calle falsa','123','2','B','8300','123123','123332','333211','1990-09-27','2019-09-27',1)",
                 [],()=>{
                   console.log("Insercion en pacientes exitosa")
                 
-                })
+                },(tx,err) => {console.log(err)} )
            
               },()=>{},()=>{
                 

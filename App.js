@@ -9,8 +9,11 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 import _ from 'lodash';
 //import { openDatabase } from 'react-native-sqlite-storage';
 import { QueryInicial, db } from "./baseDatos/Querys";
+import * as Font from 'expo-font'
 import * as SQLite from 'expo-sqlite';
-
+import  DetallePacientesComponent  from "./components/paciente/DetallePacienteComponent";
+import  AgregarPacienteComponent from "./components/paciente/AgregarPacienteComponent";
+import  TablaPacientesComponent from "./components/paciente/TablaPacientesComponent";
 //Llama a la bd y crea las tablas
 //if(db ==null )
   var db2 = QueryInicial();
@@ -20,7 +23,7 @@ import * as SQLite from 'expo-sqlite';
 
 
 const Drawer = createDrawerNavigator();
-const Stack = createStackNavigator();
+
 const MaterialBottomTabs = createMaterialBottomTabNavigator();
 const MaterialTopTabs  = createMaterialTopTabNavigator();
 
@@ -30,8 +33,27 @@ function HomeScreen({ navigation }) {
 <View style={styles.container}>
       <Text> App Covid 19 </Text>
       <Button title="Ver pacientes" onPress={() => navigation.navigate('Pacientes')} />
+      <Button title="Cargar Paciente" onPress={() => navigation.navigate('AgregarPaciente')} />
+
     </View>
+  );
+
+} 
+
+function DetallePacienteScreen({ route, navigation }) {
+  const { numeroHC } = route.params;
+  const { idHospital } = route.params;
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+    <DetallePacientesComponent numeroHC={numeroHC} idHospital ={idHospital} db ={db2} navigation={navigation}/> 
+   </View>
   );  
+}
+
+function TablaPacientesScreen({ navigation }) {
+  return (
+    <TablaPacientesComponent navigation={navigation} db ={db2}/>
+  );
 }
 
 function PacientesScreen({ navigation }) {
@@ -43,9 +65,23 @@ function PacientesScreen({ navigation }) {
 }
 
 
+function AgregarPacienteScreen ({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+       <AgregarPacienteComponent navigation={navigation} db ={db2}/> 
+    </View>
+  );
+}
+
+
+
+
 export default function App() {
   console.disableYellowBox = true;
- 
+  Font.loadAsync({
+    'Roboto_medium': require('./node_modules/native-base/Fonts/Roboto_medium.ttf')
+  })
+
 
 
   return (
@@ -53,6 +89,9 @@ export default function App() {
     <Drawer.Navigator initialRouteName="Home" >
       <Drawer.Screen name="Home" component={HomeScreen} />
       <Drawer.Screen name="Pacientes" component={PacientesScreen} />
+      <Drawer.Screen name="DetallePaciente" component={DetallePacienteScreen} />
+      <Drawer.Screen name="AgregarPaciente" component={AgregarPacienteScreen} />
+      <Drawer.Screen name="TablaPaciente" component={TablaPacientesScreen} />
     </Drawer.Navigator>
     </NavigationContainer>
   );

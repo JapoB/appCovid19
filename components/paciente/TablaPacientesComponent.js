@@ -1,22 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
-  Text,
-  View,
-  Button,
-  Modal,
   FlatList,
   TouchableOpacity,
   ScrollView,
 } from "react-native";
 import DetallePacienteComponent from "./DetallePacienteComponent";
 import _ from 'lodash';
+import { Container, Header, Content, Form, Item, Label, Icon, Left, Button, Body, Title, View, Text, Input } from 'native-base';
+
+
 
 import { QueryInicial, db } from "../../baseDatos/Querys";
 
 
+/**
+ * 
+ * Aca falta cambiar la navegabilidad hacia detalle paciente, no es mas un modal es una ventana nuev
+ */
+
+
 
 const TablaPacientesComponent = (props) => {
+
+
+  useEffect(() => {
+    selectPacientes();
+   
+  }, [props]);
 
 const selectPacientes = () =>{
   if(props.db!=null){
@@ -27,13 +38,8 @@ const selectPacientes = () =>{
           var newData=[]
           for (let i = 0; i < len; i++) {
             let row = results.rows.item(i);
-          //  console.log(`dni : ${row.dni}`);
-          // console.log(`nombre : ${row.nombre}`);
-         // console.log(`apellido : ${row.apellido}`);
-          //  newData.push({nombre:row.nombre,apellido:row.apellido,dni:row.dni})
           newData.push(row)
           setTableData(newData)
-         
           }
         });
     }); 
@@ -41,51 +47,17 @@ const selectPacientes = () =>{
   }
 
 
-
-
-const updatePaciente = pacienteNuevo => {
-
-
-
-  console.log("Update paciente " + pacienteNuevo.dni)
-
-
-    var index = _.findIndex(tableData, {dni: pacienteNuevo.dni});
-    tableData.splice(index, 1, pacienteNuevo);
-    setTableData(tableData);
-   
-
-  } 
   const [tableData, setTableData] = useState ([]) 
   const tableHead = ["Nombre", "Apellido", "DNI"];
 
   const [visibleDetalle, setVisibleDetalle] = useState(false);
 
   const [tableDetalle, setTableDetalle] = useState(selectPacientes);
-  const [paciente, setPaciente] = useState(  { nombre: "Juan", apellido: "3", dni: "3", cama: "3", estado: "bien", edad:50, genero:'M',
-  estadoClinico:{
-      icc:'no',
-      epoc:'no',
-      diabetes:'no',
-      frecuenciaRespiratoria:12,
-      saturacionOxigeno: 92,
-      saturacionOxigenoEpoc:85 ,
-      oxigenoSuplementario: 'no',
-      presionSistolitica:100,
-      frecuenciaCardiaca:51,
-      temperatura:36,
-      dienea:'si',
-      dimeroD:1100,
-      linfopenia:1200,
-      proteinaC:95,
-      urgencia:'Sin riesgo',
-      puntaje:10
-  } });
+  const [paciente, setPaciente] = useState(null);
 
   const openModal = (item) => {
-    setPaciente(item);
-
-    setVisibleDetalle(true);
+   setPaciente(item);
+  setVisibleDetalle(true);
   };
 
   const closeModal = () => {
@@ -106,59 +78,72 @@ const updatePaciente = pacienteNuevo => {
 
   //borderStyle={{borderWidth: 2, borderColor: '#c8e1ff'}}
 
+
+
+ 
+
+
   return (
-    <View style={styles.container}>
-      <View style={styles.head}>
-        <Text>Seleccione Paciente</Text>
-      </View>
-
-      <View style={styles.headTable}>
-        <Text style={styles.bold}>{tableHead[0]}</Text>
-        <Text style={styles.bold}>{tableHead[1]}</Text>
-        <Text style={styles.bold}>{tableHead[2]}</Text>
-        <Text style={styles.bold}>{tableHead[3]}</Text>
-      </View>
-
-      <ScrollView style={styles.scroll}>
-        <FlatList
-        
-          data={tableData}
-          key = {tableData.dni}
-          renderItem={(itemData) => (
+    <Container style={styles.container}> 
+  
+  <Header>
+             <Left>
+          <Button transparent
+            onPress={() => props.navigation.navigate('Home')}
+          >
+            <Icon name='arrow-back' />
+          </Button>
+        </Left>
+        <Body>
+          <Title>Seleccione Paciente</Title>
          
-         <TouchableOpacity onPress={() => openModal(itemData.item)}>
-             {/*  <View style={getStylePuntaje(itemData.item.estadoClinico.urgencia)}></View> */}
-              <View style={styles.item}>
-                <Text>{itemData.item.nombre}</Text>
+        </Body>
+             </Header>
 
-                <Text>{itemData.item.apellido}</Text>
-
-                <Text>{itemData.item.dni}</Text>
-
-          
-              </View>
-              
-        
-            </TouchableOpacity>
-          )}
-        />
-      </ScrollView>
-
-
-      <DetallePacienteComponent
-        visible={visibleDetalle}
-        paciente={paciente}
-        close={closeModal}
-        updatePaciente = {updatePaciente}
-      />
+    <View style={styles.headTable}>
+      <Text style={styles.bold}>{tableHead[0]}</Text>
+      <Text style={styles.bold}>{tableHead[1]}</Text>
+      <Text style={styles.bold}>{tableHead[2]}</Text>
+      <Text style={styles.bold}>{tableHead[3]}</Text>
     </View>
+
+    <ScrollView style={styles.scroll}>
+      <FlatList       
+        data={tableData}
+        key = {tableData.dni}
+        renderItem={(itemData) => (         
+       <TouchableOpacity onPress={() => props.navigation.navigate('DetallePaciente',{
+        numeroHC: itemData.item.numeroHC,
+        idHospital: itemData.item.idHospital,
+      })}>
+            <View style={styles.item}>
+              <Text>{itemData.item.nombre}</Text>
+              <Text>{itemData.item.apellido}</Text>
+              <Text>{itemData.item.dni}</Text>         
+            </View>
+          </TouchableOpacity>
+        )}
+      />
+    </ScrollView>
+
+
+    {/* <DetallePacienteComponent
+      visible={visibleDetalle}
+      paciente={paciente}
+      close={closeModal}
+      updatePaciente = {updatePaciente}
+    /> */}
+</Container>
   );
 };
 
 
 
 const styles = StyleSheet.create({
-  container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" },
+  /* container: { flex: 1, padding: 16, paddingTop: 30, backgroundColor: "#fff" }, */
+  container: {
+    width: '100%'
+  },
 
   head: {
     height: 40,
