@@ -16,6 +16,13 @@ export const QueryInicial = () => {
   });
 });
 
+db.transaction((tx) => {
+  console.log("Intento dropear signos vitales")
+    tx.executeSql('DROP TABLE SignosVitales',[],() => {
+  console.log("Dropeo de signos vitales exitoso")
+});
+});
+
   db.transaction((tx) => {
     console.log("Dropeo la tabla paciente")
     tx.executeSql('DROP TABLE Paciente', [], () =>
@@ -34,17 +41,6 @@ export const QueryInicial = () => {
       console.log("Dropeo Cierre Episodio exitoso"))
   })
 
-  db.transaction((tx) => {
-    console.log("Dropeo la tabla Oxigeno Suplementario")
-    tx.executeSql('DROP TABLE OxigenoSuplementario', [], () =>
-      console.log("Dropeo Cierre Oxigeno Suplementario exitoso"))
-  })
-
-  db.transaction((tx) => {
-    console.log("Dropeo la tabla Cormobilidades")
-    tx.executeSql('DROP TABLE Cormobilidades', [], () =>
-      console.log("Dropeo Cierre Cormobilidades exitoso"))
-  })
 
   db.transaction((tx) => {
     console.log("Dropeo la tabla usuarios ")
@@ -85,16 +81,12 @@ export const QueryInicial = () => {
       console.log("Dropeo Cama exitoso"))
   })
 
-  db.transaction((tx) => {
-    console.log("Dropeo la tabla Paciente Cama ")
-    tx.executeSql('DROP TABLE PacienteCama', [], () =>
-      console.log("Dropeo Paciente Cama exitoso"))
-  })
+
 
   db.transaction((tx) => {
     console.log("Dropeo la tabla Laboratorio  ")
     tx.executeSql('DROP TABLE Laboratorio', [], () =>
-      console.log("Dropeo Paciente Cama exitoso"))
+      console.log("Dropeo Laboratorio  exitoso"))
   })
 
   db.transaction((tx) => {
@@ -113,8 +105,43 @@ export const QueryInicial = () => {
      'calle varchar(40),numero varchar(10),CP varchar(10),planoCamas varchar(20))',[],()=>{
        console.log("Creacion de tabla hospital exitosa")
      })
-  },[], () =>{
+  },[],()=>{
+                
+              
+    db.transaction((tx)=>{
+      console.log("Creacion de usuario")
+      tx.executeSql("CREATE TABLE Usuario ("+
+      "cuil VARCHAR(20) PRIMARY KEY, clave VARCHAR(20), email VARCHAR(30),telefono VARCHAR(20))",
+        [],()=>{
+          console.log("Creacion de tabla Usuario exitosa")
+        })
+  
+  },()=>{},()=>{
+    db.transaction((tx)=>{
+      console.log("Creacion de usuarioHospital")
+      tx.executeSql("CREATE TABLE UsuarioHospital ("+
+      "cuil VARCHAR(20), idHospital INT, idROl INT,PRIMARY KEY (cuil,idHospital,idRol),"+
+      "FOREIGN KEY (idHospital) REFERENCES Hospital (id))"   ,
+        [],()=>{
+          console.log("Creacion de tabla UsuarioHospital exitosa")
+        })
+      
 
+    },()=>{},()=>{
+      db.transaction((tx)=>{
+        console.log("Insertar en Usuario")
+        var query = "INSERT INTO Usuario (cuil,clave, email,telefono) VALUES"+
+        "('1','1','112@email.com','23123')"
+        var params = []
+        tx.executeSql(query, params, (tx, res) => {
+          console.log('Insertar en usuario exitoso')
+      }, (tx, err) => {
+          console.log('Error al insertar usuario')
+          console.log(err)
+  
+      })
+      },()=>{},()=> {
+    
 
     db.transaction((tx) => {
       console.log("creo tabla de paciente")
@@ -122,9 +149,12 @@ export const QueryInicial = () => {
       'nombre VARCHAR(30),apellido VARCHAR(30), genero varchar(1),paisExp varchar(20),'+
       'nacionalidad varchar(30),calle varchar(40),numero varchar(10),piso varchar(20),depto varchar(10),'+
       'CP varchar(10),telefono varchar(20), telefonoFamiliar varchar(20), telefonoFamiliar2 varchar(20),' +
-      'fechaNac date, fechaIngreso date, idHospital INT ,PRIMARY KEY (idHospital,numeroHC)'+
-      'FOREIGN KEY (idHospital) REFERENCES Hospital (id))', [], () => {
+      'fechaNac date, fechaIngreso date, gravedad INT, nivelConfianza INT, auditoriaCormobilidades varchar(20),iccGrado2 varchar(2)'
+      +',epoc varchar(2),diabetesDanioOrgano varchar(2),hipertension varchar(2),enfermedadRenalCronica varchar (20), idHospital INT ,PRIMARY KEY (idHospital,numeroHC),'+
+      'FOREIGN KEY (idHospital) REFERENCES Hospital (id),FOREIGN KEY (auditoriaCormobilidades) REFERENCES Usuario(cuil))', [], () => {
         console.log("Creacion de tabla Paciente exitosa")
+      })
+      },(error)=>{console.log("Error pac "+error)},()=>{
         db.transaction((tx) => {
           console.log("inserto en tabla hospital")
           tx.executeSql('INSERT INTO Hospital (id, nombre,calle,numero,CP,planoCamas) VALUES (1,"Castro","Bs As","400","8300","Este es el plano")', [], (tx, results) => {
@@ -148,25 +178,14 @@ export const QueryInicial = () => {
             db.transaction((tx)=>{
               console.log("Inserto en la tabla de pacientes")
               tx.executeSql("Insert into Paciente (dni, tipoDocumento,numeroHC,nombre,apellido,genero,"+
-                "paisExp,nacionalidad,calle,numero,piso,depto,CP,telefono,telefonoFamiliar,telefonoFamiliar2,fechaNac,fechaIngreso,idHospital)"+
-                "VALUES (1,'dni','1','juan','Moreno','M','Arg','Arg','calle falsa','123','2','B','8300','tele123123','tele123332','tele333211','1990-09-27','2019-09-27',1),"+
-                "(2,'dni','2','Pedro','Ramirez','M','Arg','Arg','calle falsa','123','2','B','8300','123123','123332','333211','1990-09-27','2019-09-27',1)",
+                "paisExp,nacionalidad,calle,numero,piso,depto,CP,telefono,telefonoFamiliar,telefonoFamiliar2,fechaNac,fechaIngreso,gravedad,nivelConfianza,auditoriaCormobilidades,iccGrado2,epoc,diabetesDanioOrgano,hipertension,enfermedadRenalCronica,idHospital)"+
+                "VALUES (1,'dni','1','juan','Moreno','M','Arg','Arg','calle falsa','123','2','B','8300','tele123123','tele123332','tele333211','1990-09-27','2019-09-27',1,50,'1','no','no','no','no','no',1),"+
+                "(2,'dni','2','Pedro','Ramirez','M','Arg','Arg','calle falsa','123','2','B','8300','123123','123332','333211','1990-09-27','2019-09-27',1,50,'1','no','no','no','no','no',1)",
                 [],()=>{
                   console.log("Insercion en pacientes exitosa")
                 
                 },(tx,err) => {console.log(err)} )
            
-              },()=>{},()=>{
-                
-              
-                db.transaction((tx)=>{
-                  console.log("Creacion de usuario")
-                  tx.executeSql("CREATE TABLE Usuario ("+
-                  "cuil VARCHAR(20) PRIMARY KEY, clave VARCHAR(20), email VARCHAR(30),telefono VARCHAR(20))",
-                    [],()=>{
-                      console.log("Creacion de tabla Usuario exitosa")
-                    })
-              
               },()=>{},()=>{
                 console.log("Creacion de tabla cierreEpisodio")
                 db.transaction((tx)=>{
@@ -177,31 +196,11 @@ export const QueryInicial = () => {
                     console.log("Creacion de tabla CierreEpisodio exitosa")
                   })
                 },()=>{},()=>{
-                  db.transaction((tx)=>{
-                    tx.executeSql("CREATE TABLE OxigenoSuplementario ("+
-                    "idHospital INT, numeroHC VARCHAR(20), fecha DATE,cuil VARCHAR(20), razon VARCHAR(80),accion VARCHAR (20),PRIMARY KEY (idHospital,numeroHC,fecha),"+
-                    "FOREIGN KEY (idHospital) REFERENCES Hospital (id),FOREIGN KEY (numeroHC) REFERENCES Paciente (numeroHC),FOREIGN KEY (cuil) REFERENCES Usuario(cuil))"   ,
-                      [],()=>{
-                        console.log("Creacion de tabla OxigenoSuplementario exitosa")
-                      })
-                    
-                  },()=>{},()=>{
-                    db.transaction((tx)=>{
-                      console.log("Creacion de usuarioHospital")
-                      tx.executeSql("CREATE TABLE UsuarioHospital ("+
-                      "cuil VARCHAR(20), idHospital INT, idROl INT,PRIMARY KEY (cuil,idHospital,idRol),"+
-                      "FOREIGN KEY (idHospital) REFERENCES Hospital (id))"   ,
-                        [],()=>{
-                          console.log("Creacion de tabla UsuarioHospital exitosa")
-                        })
-                      
-                
-                    },()=>{},()=>{
                       db.transaction((tx)=>{
                         console.log("Creacion de tabla Alertas")
                         tx.executeSql("CREATE TABLE Alerta ("+
-                        "idHospital INT, numeroHC VARCHAR(20), fecha DATE, gravedad INT, calificacion VARCHAR(20),PRIMARY KEY (idHospital,numeroHC,fecha),"+
-                        "FOREIGN KEY (idHospital) REFERENCES Hospital (id),FOREIGN KEY (numeroHC) REFERENCES Paciente (numeroHC))"   ,
+                        "idHospital INT, numeroHC VARCHAR(20), fecha DATE, gravedad INT, calificacionEnfermero VARCHAR(1),calificacionMedico VARCHAR(1),auditoriaEnfermero varchar(20),auditoriaMedico VARCHAR(20),PRIMARY KEY (idHospital,numeroHC,fecha),"+
+                        "FOREIGN KEY (idHospital) REFERENCES Hospital (id),FOREIGN KEY (numeroHC) REFERENCES Paciente (numeroHC),FOREIGN KEY (auditoriaEnfermero) REFERENCES usuario(cuil),FOREIGN KEY (auditoriaMedico) REFERENCES usuario(cuil))"   ,
                           [],()=>{
                             console.log("Creacion de tabla alertas exitosa")
                           })
@@ -236,34 +235,15 @@ export const QueryInicial = () => {
                                   console.log("Creacion de tabla Sector exitosa")
                                 })
                             },()=>{},()=>{
-                              db.transaction((tx)=>{
-                                console.log("Creacion de tabla cormobilidades")
-                                tx.executeSql("CREATE TABLE Cormobilidades ("+
-                                "idHospital INT, numeroHC VARCHAR(20), iccGrado2 VARCHAR(2),epoc VARCHAR(2),diabetesDanioOrgano VARCHAR (2),cuil VARCHAR(20),PRIMARY KEY (idHospital,numeroHC),"+
-                                "FOREIGN KEY (idHospital) REFERENCES Hospital (id),FOREIGN KEY (numeroHC) REFERENCES Paciente (numeroHC),FOREIGN KEY (cuil) REFERENCES UsuarioHospital (cuil))"   ,
-                                  [],()=>{
-                                    console.log("Creacion de tabla Cormobilidades exitosa")
-                                  })
-                              
-                              },()=>{},()=>{
                                 db.transaction((tx)=>{
                                   console.log("Creacion de Cama ")
                                   tx.executeSql("CREATE TABLE Cama ("+
-                                  "idIsla VARCHAR(20), idHospital INT, idSector INT,idCama VARCHAR(20), estado VARCHAR(10),ubicacionX INT, ubicacionY INT,PRIMARY KEY (idIsla,idHospital,idSector,idCama),"+
-                                  "FOREIGN KEY (idHospital) REFERENCES Hospital (id), FOREIGN KEY (idIsla) REFERENCES Isla (idIsla),FOREIGN KEY (idSector) REFERENCES Sector (idSector))"   ,
+                                  "idIsla VARCHAR(20), idHospital INT, idSector INT,idCama VARCHAR(20), estado VARCHAR(10),ubicacionX INT, ubicacionY INT,orientacion VARCHAR(2),numeroHC VARCHAR(20),PRIMARY KEY (idIsla,idHospital,idSector,idCama),"+
+                                  "FOREIGN KEY (idHospital) REFERENCES Hospital (id), FOREIGN KEY (idIsla) REFERENCES Isla (idIsla),FOREIGN KEY (idSector) REFERENCES Sector (idSector), FOREIGN KEY (numeroHC) references Paciente (numeroHC))"   ,
                                     [],()=>{
                                       console.log("Creacion de tabla Cama exitosa")
                                     })
                                 },()=>{},()=>{
-                                  db.transaction((tx)=>{
-                                    console.log("Creacion de PacienteCama")
-                                    tx.executeSql("CREATE TABLE PacienteCama ("+
-                                    "numeroHC varchar(20),idIsla VARCHAR(20), idHospital INT, idSector INT,idCama VARCHAR(20),cuil VARCHAR(20),gravedad INT,fecha DATE,PRIMARY KEY (numeroHC,fecha,idIsla,idHospital,idSector,idCama),"+
-                                    "FOREIGN KEY (idHospital) REFERENCES Hospital (id), FOREIGN KEY (idIsla) REFERENCES Isla (idIsla),FOREIGN KEY (idSector) REFERENCES Sector (idSector),FOREIGN KEY (numeroHC) REFERENCES Paciente (numeroHC),FOREIGN KEY (cuil) REFERENCES Usuario(cuil))"   ,
-                                      [],()=>{
-                                        console.log("Creacion de tabla Cama exitosa")
-                                      })
-                                  },()=>{},()=>{
                                     db.transaction((tx)=>{
                                       console.log("Creacion de Laboratorio")
                                       tx.executeSql("CREATE TABLE Laboratorio ("+
@@ -284,7 +264,7 @@ export const QueryInicial = () => {
                                       },()=>{},()=>{
                                         db.transaction((tx)=>{
                                           console.log("Creacion de SignosVitales")
-                                          var query = 'CREATE TABLE IF NOT EXISTS SignosVitales (id_hospital INTEGER, numeroHC varchar(20), fecha date, fec_resp INTEGER, sat_oxi INTEGER, sat_epoc INTEGER,presSist INTEGER, frec_card INTEGER, temp REAL, auditoria VARCHAR(20),PRIMARY KEY (id_hospital,numeroHC,fecha),FOREIGN KEY (auditoria) REFERENCES Usuario(cuil), FOREIGN KEY (id_hospital) REFERENCES Hospital (id),FOREIGN KEY (numeroHC) REFERENCES paciente (numeroHC))'
+                                          var query = 'CREATE TABLE IF NOT EXISTS SignosVitales (id_hospital INTEGER, numeroHC varchar(20), fecha date, fec_resp REAL, sat_oxi REAL, sat_epoc REAL,presSist REAL, frec_card REAL, temp REAL,nivelConciencia varchar(15), auditoria VARCHAR(20),PRIMARY KEY (id_hospital,numeroHC,fecha),FOREIGN KEY (auditoria) REFERENCES Usuario(cuil), FOREIGN KEY (id_hospital) REFERENCES Hospital (id),FOREIGN KEY (numeroHC) REFERENCES paciente (numeroHC))'
                                           var params = []
                                           tx.executeSql(query, params, (tx, res) => {
                                             console.log('Tabla signos vitales creada')
@@ -292,24 +272,12 @@ export const QueryInicial = () => {
                                             console.log('Tabla signos vitales no pudo ser creada')
                                     
                                         })
+
                                         },()=>{},()=>{
-                                          db.transaction((tx)=>{
-                                            console.log("Insertar en Usuario")
-                                            var query = "INSERT INTO Usuario (cuil,clave, email,telefono) VALUES"+
-                                            "('1','1','112@email.com','23123')"
-                                            var params = []
-                                            tx.executeSql(query, params, (tx, res) => {
-                                              console.log('Insertar en usuario exitoso')
-                                          }, (tx, err) => {
-                                              console.log('Error al insertar usuario')
-                                              console.log(err)
-                                      
-                                          })
-                                          },()=>{},()=>{
                                             db.transaction((tx)=>{
                                               console.log("Insertar en Alerta")
-                                              var query = "INSERT INTO ALERTA (idHospital, numeroHC, fecha, gravedad, calificacion) VALUES "+
-                                              " (1,'1','2018-05-05',1,'normal')"
+                                              var query = "INSERT INTO ALERTA (idHospital, numeroHC, fecha, gravedad, calificacionEnfermero,calificacionMedico,auditoriaEnfermero,auditoriaMedico) VALUES "+
+                                              " (1,'1','2018-05-05',1,'T','F','1','1')"
                                               var params = []
                                               tx.executeSql(query, params, (tx, res) => {
                                                 console.log('Insertar en alerta exitoso')
@@ -318,18 +286,6 @@ export const QueryInicial = () => {
                                         
                                             })
                                             },()=>{},()=>{
-                                              db.transaction((tx)=>{
-                                                console.log("Insertar en cormobilidades")
-                                                var query = "INSERT INTO Cormobilidades (idHospital, numeroHC , iccGrado2, epoc, diabetesDanioOrgano, cuil) VALUES "+
-                                                "(1,'1','no','no','no','1')"
-                                                var params = []
-                                                tx.executeSql(query, params, (tx, res) => {
-                                                  console.log('Insertar en cormobilidades exitoso')
-                                              }, (tx, err) => {
-                                                  console.log('error al insertar en cormobilidades')
-                                          
-                                              })
-                                              },()=>{},()=>{
                                                 db.transaction((tx)=>{
                                                   console.log("Insertar en isla")
                                                   var query = "INSERT INTO Isla (idIsla,idHospital,idLider) VALUES "+
@@ -344,8 +300,8 @@ export const QueryInicial = () => {
                                                 },()=>{},()=>{
                                                   db.transaction((tx)=>{
                                                     console.log("insertar de SignosVitales")
-                                                    var query = "INSERT INTO SignosVitales (id_hospital,numeroHc,fecha,fec_resp,sat_oxi,sat_epoc,presSist,frec_card,temp,auditoria) VALUES "+
-                                                    "(1,'1','2020-01-05',50,15,35,10,60,37,'1')"
+                                                    var query = "INSERT INTO SignosVitales (id_hospital,numeroHc,fecha,fec_resp,sat_oxi,sat_epoc,presSist,frec_card,temp,nivelConciencia,auditoria) VALUES "+
+                                                    "(1,'1','2020-01-05',50,15,35,10,60,37,'consciente','1')"
                                                     var params = []
                                                     tx.executeSql(query, params, (tx, res) => {
                                                       console.log('Insertar en Signos vitales exitoso')
@@ -369,28 +325,15 @@ export const QueryInicial = () => {
                                                     },()=>{},()=>{
                                                       db.transaction((tx)=>{
                                                         console.log("insertar de cama")
-                                                        var query = "INSERT INTO Cama (idIsla,idHospital,idSector,idCama,estado,ubicacionX,ubicacionY) VALUES "+
-                                                        "('1',1,'1','cama1','ocupada',45,55)"
+                                                        var query = "INSERT INTO Cama (idIsla,idHospital,idSector,idCama,estado,ubicacionX,ubicacionY,orientacion,numeroHC) VALUES "+
+                                                        "('1',1,'1','cama1','ocupada',45,55,'SE','1')"
                                                           var params = []
                                                         tx.executeSql(query, params, (tx, res) => {
                                                           console.log('insertar en cama exitoso')
                                                       }, (tx, err) => {
                                                           console.log('error al insertar en cama')
-                                                  
                                                       })
                                                       },()=>{},()=>{
-                                                        db.transaction((tx)=>{
-                                                          console.log("insertar de pacienteCama")
-                                                          var query = "INSERT INTO PacienteCama (numeroHC,idIsla,idHospital,idSector,idCama,cuil,gravedad,fecha) VALUES "+
-                                                          "('1','1',1,'1','cama1','1',1,'2020-05-05')"
-                                                          var params = []
-                                                          tx.executeSql(query, params, (tx, res) => {
-                                                            console.log('insertar en pacienteCama exitoso')
-                                                        }, (tx, err) => {
-                                                            console.log('error en insertar pacienteCama')
-                                                    
-                                                        })
-                                                        },()=>{},()=>{
                                                           db.transaction((tx)=>{
                                                             console.log("insertar de Laboratorio")
                                                             var query = "INSERT INTO Laboratorio (numeroHC,idHospital,fecha,cuil,dimeroD,linfopenia,proteinaC) VALUES "+
@@ -435,13 +378,8 @@ export const QueryInicial = () => {
               })
 
                
-            })
-          });
-        });
-      })
-    });
-  })
-  
+           
+
 
 
   return db;

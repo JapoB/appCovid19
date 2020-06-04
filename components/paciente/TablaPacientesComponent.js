@@ -7,7 +7,8 @@ import {
 } from "react-native";
 import DetallePacienteComponent from "./DetallePacienteComponent";
 import _ from 'lodash';
-import { Container, Header, Content, Form, Item, Label, Icon, Left, Button, Body, Title, View, Text, Input } from 'native-base';
+import { Container, View, Text } from 'native-base';
+import  HeaderComponent  from "./vistas/HeaderComponent";
 
 
 
@@ -27,7 +28,7 @@ const TablaPacientesComponent = (props) => {
   useEffect(() => {
     selectPacientes();
    
-  }, [props]);
+  }, []);
 
 const selectPacientes = () =>{
   if(props.db!=null){
@@ -47,7 +48,7 @@ const selectPacientes = () =>{
   }
 
 
-  const [tableData, setTableData] = useState ([]) 
+  const [tableData, setTableData] = useState([]); 
   const tableHead = ["Nombre", "Apellido", "DNI"];
 
   const [visibleDetalle, setVisibleDetalle] = useState(false);
@@ -86,19 +87,8 @@ const selectPacientes = () =>{
   return (
     <Container style={styles.container}> 
   
-  <Header>
-             <Left>
-          <Button transparent
-            onPress={() => props.navigation.navigate('Home')}
-          >
-            <Icon name='arrow-back' />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Seleccione Paciente</Title>
-         
-        </Body>
-             </Header>
+  <HeaderComponent title={'Seleccione Paciente'} navigation={props.navigation} ruta = {'Home'}></HeaderComponent>
+
 
     <View style={styles.headTable}>
       <Text style={styles.bold}>{tableHead[0]}</Text>

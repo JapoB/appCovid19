@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import { db } from "../../baseDatos/Querys";
 import { Container, Header, Content, Form, Item,View,Text, Button,Label, Icon, Left, Body, Title,  Input } from 'native-base';
+import  HeaderComponent  from "./vistas/HeaderComponent";
 
 
 
@@ -33,8 +34,8 @@ const DetallePacientesComponent = (props) => {
         tx.executeSql(
           "SELECT * FROM Paciente JOIN SignosVitales ON Paciente.numeroHC = SignosVitales.numeroHC AND paciente.idHospital = SignosVitales.id_hospital" +
             " JOIN Laboratorio ON Paciente.numeroHC = Laboratorio.numeroHC AND Paciente.idHospital = Laboratorio.idHospital" +
-            " JOIN PacienteCama ON Paciente.numeroHC = PacienteCama.numeroHC AND Paciente.idHospital = PacienteCama.idHospital" +
-            " JOIN Cormobilidades ON Paciente.numeroHC = Cormobilidades.numeroHC AND Paciente.idHospital = Cormobilidades.idHospital" +
+            " JOIN Cama ON Paciente.numeroHC = Cama.numeroHC AND Paciente.idHospital = Cama.idHospital" +
+            
             " JOIN Alerta ON Paciente.numeroHC = Alerta.numeroHC AND Paciente.idHospital = Alerta.idHospital" +
             " WHERE Paciente.numeroHC = ? AND Paciente.idHospital = ?",
           [props.numeroHC, props.idHospital],
@@ -75,14 +76,14 @@ const DetallePacientesComponent = (props) => {
         db.transaction((tx)=>{
           var date = new Date()
           date = date.toString()
-          auditoria = '1'
-          var query = 'INSERT INTO SignosVitales (id_hospital,numeroHc,fecha,fec_resp,sat_oxi,sat_epoc,presSist,frec_card,temp,auditoria) (null, ?,?,?,?,?,?,?,?,?,?)'
+    
+          var query = 'INSERT INTO SignosVitales (id_hospital,numeroHc,fecha,fec_resp,sat_oxi,sat_epoc,presSist,frec_card,temp,nivelConciencia,auditoria) values (?,?,?,?,?,?,?,?,?,?,?)'
           var params = [paciente.idHospital, paciente.numeroHC, date, lecturaFrecuenciaRespiratoria, lecturaSaturacionOxigeno,
-            lecturaSaturacionOxigenoEpoc, lecturaPresionSistolitica, lecturaFrecuenciaCardiaca, lecturaTemperatura, auditoria]
+            lecturaSaturacionOxigenoEpoc, lecturaPresionSistolitica, lecturaFrecuenciaCardiaca, lecturaTemperatura,'consciente', '1']
           tx.executeSql(query, params, (tx, results)=>{
             
-          },(tx, err)=>{})
-        },(err)=>{},()=>{
+          },(tx, err)=>{console.log("Error al insertar en signos vitales "+err)})
+        },(err)=>{console.log("Error al insertar en signos vitales "+err)},()=>{
           console.log('Carga de dato ok')
           Alert.alert('Datos cargados correctamente')
           handleBack()
@@ -307,19 +308,8 @@ const DetallePacientesComponent = (props) => {
       return (
         <Container animationType="slide" style={styles.container}>
 
-        <Header>
-             <Left>
-          <Button transparent
-            onPress={() => props.navigation.navigate('TablaPaciente')}
-          >
-            <Icon name='arrow-back' />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Detalles de Paciente</Title>
-          <Title>{paciente.nombre} {paciente.apellido} HC: {props.numeroHC}</Title>
-        </Body>
-             </Header>
+<HeaderComponent title={'Detalles Paciente'} subTittle={paciente.nombre +" "+paciente.apellido} ruta={'TablaPaciente'} navigation={props.navigation}></HeaderComponent>
+
 
              <Content style={styles.container}> 
           <ScrollView style={styles.container}>
@@ -385,19 +375,7 @@ const DetallePacientesComponent = (props) => {
     return (
       <Container animationType="slide" style={styles.container}>
 
-<Header>
-             <Left>
-          <Button transparent
-            onPress={() => closeCargarDatos()}
-          >
-            <Icon name='arrow-back' />
-          </Button>
-        </Left>
-        <Body>
-          <Title>Cargar datos del paciente</Title>
-          <Title>{paciente.nombre} {paciente.apellido} HC: {props.numeroHC}</Title>
-        </Body>
-             </Header>
+  <HeaderComponent title={'Cargar Datos Clinicos'} subTittle={paciente.nombre +" "+paciente.apellido}></HeaderComponent>
 
 
         <ScrollView>

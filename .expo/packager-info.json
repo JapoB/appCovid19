@@ -2,9 +2,9 @@
   "devToolsPort": 19002,
   "expoServerPort": 19000,
   "packagerPort": 19001,
-  "packagerPid": 9880,
+  "packagerPid": 9912,
   "expoServerNgrokUrl": "https://9i-can.anonymous.appcovid19.exp.direct",
   "packagerNgrokUrl": "https://packager.9i-can.anonymous.appcovid19.exp.direct",
-  "ngrokPid": 8812,
+  "ngrokPid": 16988,
   "webpackServerPort": null
 }
