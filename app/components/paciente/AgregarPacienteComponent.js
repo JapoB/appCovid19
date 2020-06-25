@@ -3,29 +3,29 @@ import {Alert,
     StyleSheet,
   } from "react-native";
   import { Container, Header, Content, Form, Item, Label, Icon, Left, Button, Body, Title, View, Text, Input } from 'native-base';
-import HeaderComponent from "./vistas/HeaderComponent"
-import { db } from "../../baseDatos/Querys";
+//import HeaderComponent from "../compartido/HeaderComponent"
+import { db } from "../../utils/baseDatos/Querys";
 
 
 const AgregarPacienteComponent = (props) =>{
 
     const [idHospital, setIdHospital] = useState(1) // Aca poner el hospital del usuario
-    const [numerHc, setnumerHC] = useState('3') 
+    const [numerHc, setnumerHC] = useState('') 
     const [fechaNac, setFechaNac] = useState('2000-01-01')
-    const [tipoDoc, setTipoDoc] = useState('3')
-    const [pais, setPais] = useState('3')
-    const [numDoc, setNumDoc] = useState('3')
-    const [nombre, setNombre] = useState('3')
-    const [apellido, setApellido] = useState('3')
-    const [nacionalidad, setNacionalidad] = useState('3')
-    const [sexo, setSexo] = useState('3')
-    const [calle, setCalle] = useState('3')
-    const [numero, setNumero] = useState('3')
-    const [piso, setPiso] = useState('3')
-    const [cp, setCp] = useState('3')
-    const [telefono1, setTelefono1] = useState('3')
-    const [telefono2, setTelefono2] = useState('3')
-    const [telefono3, setTelefono3] = useState('3')
+    const [tipoDoc, setTipoDoc] = useState('')
+    const [pais, setPais] = useState('')
+    const [numDoc, setNumDoc] = useState('')
+    const [nombre, setNombre] = useState('')
+    const [apellido, setApellido] = useState('')
+    const [nacionalidad, setNacionalidad] = useState('')
+    const [sexo, setSexo] = useState('')
+    const [calle, setCalle] = useState('')
+    const [numero, setNumero] = useState('')
+    const [piso, setPiso] = useState('')
+    const [cp, setCp] = useState('')
+    const [telefono1, setTelefono1] = useState('')
+    const [telefono2, setTelefono2] = useState('')
+    const [telefono3, setTelefono3] = useState('')
     const [gravedad, setGravedad] = useState('1');
     const [confianza, setCnfianza] = useState('100')
     const [auditoria, setAuditoria] = useState('1') //aca va el cuit del usuario que esta cargando
@@ -34,7 +34,7 @@ const AgregarPacienteComponent = (props) =>{
     const [diabetes, setDiabetes] = useState('no')
     const [hipertension, setHipertencion] = useState('no')
     const [renal, setRenal] = useState('no')
-    const [depto, setDepto] = useState('3')
+    const [depto, setDepto] = useState('')
 
 
   const submit = () => {
@@ -70,8 +70,8 @@ const AgregarPacienteComponent = (props) =>{
 
     return (
         <Container style={styles.container}>
-          <HeaderComponent title={'Agregar Nuevo Paciente'} subTittle={''} navigation={props.navigation} ruta = {'Home'}></HeaderComponent>
-
+{/*           <HeaderComponent title={'Agregar Nuevo Paciente'} subTittle={''} navigation={props.navigation} ruta = {'Home'}></HeaderComponent>
+ */}
 
 
            <Content style={styles.container}>
